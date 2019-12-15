@@ -106,7 +106,7 @@ class Register extends React.Component {
     return (
       <Grid textAlign="center" verticalAlign="middle" className="app">
         <Grid.Column style={{ maxWidth: 450 }}>
-          <Header as="h2" icon color="orange" textAlign="center">
+          <Header as="h1" icon color="orange" textAlign="center">
             <Icon name="puzzle piece" color="orange"/>
             Register for Dev
           </Header>
@@ -116,7 +116,7 @@ class Register extends React.Component {
               <Form.Input fluid name="email" icon="mail" iconPosition="left" placeholder="Email address" onChange={this.handleChange} value={email} className={this.handleInputError(errors, "email")} type="email"/>
               <Form.Input fluid name="password" icon="lock" iconPosition="left" placeholder="Password" onChange={this.handleChange} value={password} className={this.handleInputError(errors, "password")} type="password"/>
               <Form.Input fluid name="passwordConfirmation" icon="repeat" iconPosition="left" placeholder="Password Confirmation" onChange={this.handleChange} value={passwordConfirmation} className={this.handleInputError(errors, "password")} type="password"/>
-              <Button disabled={loading} className={loading? 'loading': ''} color="green" fluid size="large">Submit</Button>
+              <Button disabled={loading} className={loading? 'loading': ''} color="orange" fluid size="large">Submit</Button>
             </Segment>
           </Form>
           {errors.length > 0 && (<Message error><b>Error: </b>{this.displayErrors(errors)} </Message>)}
