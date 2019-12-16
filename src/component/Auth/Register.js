@@ -77,7 +77,7 @@ class Register extends React.Component {
             photoURL: 'http://gravatar.come/avatar/${md5(createdUser.user.email)}?d=identicon'
           })
           .then(() => {
-            this.savedUser(createdUser).then(() => {
+            this.saveUser(createdUser).then(() => {
               console.log('User saved');
             })
             this.setState({ loading: false });
@@ -107,7 +107,7 @@ class Register extends React.Component {
       <Grid textAlign="center" verticalAlign="middle" className="app">
         <Grid.Column style={{ maxWidth: 450 }}>
           <Header as="h1" icon color="orange" textAlign="center">
-            <Icon name="puzzle piece" color="orange"/>
+            <Icon name="user plus" color="orange"/>
             Register for Dev
           </Header>
           <Form onSubmit={this.handleSubmit} size="large">
