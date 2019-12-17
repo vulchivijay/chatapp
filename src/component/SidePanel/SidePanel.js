@@ -14,8 +14,8 @@ class SidePanel extends React.Component {
         vertical
         style={{ background: '#4c3c4c', fontSize: '1.2rem', margin: 0, borderRadius: 0 }}
       >
-        <UserPanel currentUser={currentUser}/>
-        <Channels />
+        <UserPanel currentUser={currentUser} />
+        <Channels currentUser={currentUser} />
       </Menu>
     )
   }
