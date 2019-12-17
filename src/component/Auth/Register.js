@@ -108,7 +108,7 @@ class Register extends React.Component {
         <Grid.Column style={{ maxWidth: 450 }}>
           <Header as="h1" icon color="orange" textAlign="center">
             <Icon name="user plus" color="orange"/>
-            Register for Dev
+            Register with Roomy
           </Header>
           <Form onSubmit={this.handleSubmit} size="large">
             <Segment stacked>
