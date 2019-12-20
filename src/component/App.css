@@ -19,3 +19,12 @@
 	border-left: 2px solid blue;
 	padding-left: 8px;
 }
+
+.message__image {
+	padding: 1em;
+}
+
+/* progress bar */
+.progress__bar {
+	margin: .3em 0 0 0 !important;
+}
