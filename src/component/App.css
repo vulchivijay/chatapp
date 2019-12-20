@@ -1,7 +1,14 @@
+html,
+body,
+.app {
+  height: 100vh;
+  background-color: #eee;
+}
+
 /* Messages js */
 .messages {
 	height: 420px;
-	overflow-y: scroll;
+	overflow-y: auto;
 }
 
 /* message form js*/

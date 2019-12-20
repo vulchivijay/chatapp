@@ -1,6 +1,5 @@
 import React from 'react';
 import { Grid, Form, Segment, Button, Header, Message, Icon } from 'semantic-ui-react';
-import './Register.css';
 import { Link } from 'react-router-dom';
 import md5 from 'md5';
 
