@@ -112,14 +112,6 @@ class UserPanel extends React.Component {
     return (
       <Grid style={{margin: 0}}>
         <Grid.Column>
-          <Grid.Row style={{margin: 0, padding: '1.2em'}}>
-            {/* App header */}
-            <Header inverted floated="left" as="h3">
-              <Icon name="slack"/>
-              <Header.Content>Roomy</Header.Content>
-            </Header>
-          </Grid.Row>
-
           {/* User Dropdown */}
           <Grid.Row>
             <Header style={{padding: '0.25em'}} as="h4" inverted>
