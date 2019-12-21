@@ -18,7 +18,8 @@ class MessageForm extends React.Component {
 		uploadState: '',
 		uploadTask: null,
 		storageRef: firebase.storage().ref(),
-		percentUpload: 0
+		percentUpload: 0,
+		typingRef: firebase.database().ref('typing')
 	}
 
 	openModal = () => this.setState({ modal: true });
@@ -26,6 +27,22 @@ class MessageForm extends React.Component {
 
 	handleChange = event => {
 		this.setState({[event.target.name]: event.target.value });
+	}
+
+	handleKeyDown = () => {
+		const { message, typingRef, channel, user } = this.state;
+
+		if(message) {
+			typingRef
+				.child(channel.id)
+				.child(user.uid)
+				.set(user.displayName);
+		} else {
+			typingRef
+				.child(channel.id)
+				.child(user.uid)
+				.remove();
+		}
 	}
 
 	createMessage = (fileUrl = null) => {
@@ -47,7 +64,7 @@ class MessageForm extends React.Component {
 
 	sendMessage = () => {
 		const { getMessagesRef } = this.props;
-		const { message, channel } = this.state;
+		const { message, channel, typingRef, user } = this.state;
 
 		if (message) {
 			this.setState({ loading: true });
@@ -57,6 +74,10 @@ class MessageForm extends React.Component {
 				.set(this.createMessage())
 				.then(() => {
 					this.setState({ loading: false, message: '', errors: [] })
+					typingRef
+						.child(channel.id)
+						.child(user.uid)
+						.remove();
 				})
 				.catch(err => {
 					console.log(err);
@@ -145,6 +166,7 @@ class MessageForm extends React.Component {
 					name="message"
 					value={message}
 					onChange={this.handleChange}
+					onKeyDown={this.handleKeyDown}
 					style={{ marginBottom: '0.7em'}}
 					label={<Button icon={'add'} />}
 					labelPosition="left"

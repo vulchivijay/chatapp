@@ -12,13 +12,13 @@ const App = ({ currentUser, currentChannel, isPrivateChannel, userPosts }) => (
   <Grid colums="equal" className="app" style={{ background: '#eee', margin: 0 }}>
     <Grid.Row style={{padding: 0}}>
       <Grid.Column width={4} stretched>
-        <ColorPanel />
+        {/*<ColorPanel />*/}
         <SidePanel
           key={ currentUser && currentUser.uid }
           currentUser={currentUser}
         />
       </Grid.Column>
-      <Grid.Column width={9}>
+      <Grid.Column width={12}>
         <Messages
           key={ currentChannel && currentChannel.id }
           currentChannel={currentChannel}
@@ -26,14 +26,14 @@ const App = ({ currentUser, currentChannel, isPrivateChannel, userPosts }) => (
           isPrivateChannel={isPrivateChannel}
         />
       </Grid.Column>
-      <Grid.Column width={3}>
+      {/*<Grid.Column width={3}>
         <MetaPanel
           key={currentChannel && currentChannel.id}
           userPosts={userPosts}
           currentChannel={currentChannel}
           isPrivateChannel={isPrivateChannel}
         />
-      </Grid.Column>
+      </Grid.Column>*/}
     </Grid.Row>
   </Grid>
   // <Grid container spacing={3}>
