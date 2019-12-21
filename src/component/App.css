@@ -33,11 +33,7 @@ body,
 	font-size: 16px;
 	margin: 0;
 	border-radius: 0;
-	background-color: #535c68;
-}
-
-.chatPannel {
-	position: relative;
+	background-color: #130f40;
 }
 .chatPannel .ui.segment {
 	margin: 0;
@@ -51,7 +47,7 @@ body,
 }
 /* Messages js */
 .chatPannel .ui.segment.messages {
-	height: calc(100% - 180px);
+	height: calc(100% - 168px);
 	overflow: hidden;
 	overflow-y: auto;
 }
@@ -60,12 +56,18 @@ body,
 .chatPannel .ui.segment.message__form {
 	position: absolute;
 	z-index: 200;
-	right: 1em;
-	bottom: 1em;
+	right: 0;
+	bottom: 0;
 	left: 0;
-	padding: 0 16px;
+	margin: 0 16px 15px;
+	padding: 14px;
+	border: 1px solid #ddd;
 }
-
+.ui.segment.message__form .btn-group {
+	position: absolute;
+	top: 15px;
+	right: 0;
+}
 /* message.js */
 .message__self {
 	border-left: 2px solid blue;

@@ -97,9 +97,7 @@ class DirectMessages extends React.Component {
 		return (
 			<Menu.Menu className="menu">
 				<Menu.Item>
-					<span>
-						<Icon name="chat" /> DIRECT MESSAGES
-					</span>{" "}
+					<span>Direct messages</span>{" "}
 					({ users.length })
 				</Menu.Item>
 				{ users.map(user => (

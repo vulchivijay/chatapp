@@ -188,10 +188,8 @@ class Channels extends React.Component {
 			<React.Fragment>
 				<Menu.Menu className="menu">
 					<Menu.Item>
-						<span>
-							<Icon name="group" /> CHANNELS
-						</span>{" "}
-						({ channels.length }) <Icon name="add" onClick={this.openModal}/>
+						<span> Channels </span>{" "}
+						({ channels.length }) <Icon name="add circle" onClick={this.openModal}/>
 					</Menu.Item>
 					{/* Channels */}
 					{this.displayChannels(channels)}

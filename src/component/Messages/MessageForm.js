@@ -167,28 +167,25 @@ class MessageForm extends React.Component {
 					value={message}
 					onChange={this.handleChange}
 					onKeyDown={this.handleKeyDown}
-					style={{ marginBottom: '0.7em'}}
-					label={<Button icon={'add'} />}
-					labelPosition="left"
 					className={
 						errors.some(error => error.message.includes('message')) ? 'error': ''
 					}
 					placeholder="write your message"
 				/>
-				<Button.Group icon widths="2">
+				<Button.Group icon className="btn-group">
 					<Button
 						color="orange"
 						onClick={this.sendMessage}
 						disabled={loading}
-						content="Add Reply"
+						content="Send"
 						labelPosition="left"
-						icon="edit"
+						icon="send"
 					/>
 					<Button
 						color="teal"
 						disabled={uploadState === "uploading"}
 						onClick={this.openModal}
-						content="upload Media"
+						content="Upload media"
 						labelPosition="right"
 						icon="cloud upload"
 					/>
