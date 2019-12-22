@@ -1,7 +1,7 @@
 import React from 'react';
 import uuidv4 from 'uuid/v4';
 import firebase from './../../firebase';
-import { Segment, Input, Button } from 'semantic-ui-react';
+import { Segment, Button, TextArea, Icon } from 'semantic-ui-react';
 
 import FileModal from './FileModal';
 import ProgressBar from './ProgressBar';
@@ -161,8 +161,7 @@ class MessageForm extends React.Component {
 
 		return (
 			<Segment className="message__form">
-				<Input
-					fluid
+				<TextArea
 					name="message"
 					value={message}
 					onChange={this.handleChange}
@@ -174,20 +173,16 @@ class MessageForm extends React.Component {
 				/>
 				<Button.Group icon className="btn-group">
 					<Button
-						color="orange"
-						onClick={this.sendMessage}
-						disabled={loading}
-						content="Send"
-						labelPosition="left"
-						icon="send"
-					/>
-					<Button
 						color="teal"
 						disabled={uploadState === "uploading"}
 						onClick={this.openModal}
-						content="Upload media"
-						labelPosition="right"
 						icon="cloud upload"
+					/>
+					<Button
+						color="orange"
+						onClick={this.sendMessage}
+						disabled={loading}
+						icon="send"
 					/>
 				</Button.Group>
 				<FileModal

@@ -2,7 +2,7 @@ import React from 'react';
 import firebase from './../../firebase';
 import { connect } from 'react-redux';
 import { setCurrentChannel, setPrivateChannel } from './../../actions';
-import { Menu, Icon } from 'semantic-ui-react';
+import { Menu } from 'semantic-ui-react';
 
 class Starred extends React.Component {
 	state = {
@@ -46,7 +46,6 @@ class Starred extends React.Component {
 				key={channel.id}
 				onClick={() => this.changeChannel(channel)}
 				name={channel.name}
-				style={{ opacity: 0.7 }}
 				active={channel.id === this.state.activeChannel}
 			>
 				# { channel.name }

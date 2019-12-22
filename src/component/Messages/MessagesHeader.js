@@ -17,7 +17,7 @@ class MessagesHeader extends React.Component {
 		return (
 			<Segment clearing>
 				{/* Channel title */}
-				<Header fluid="true" as="p" floated="left" style={{ margin: 0 }}>
+				<Header fluid="true" as="h4" floated="left" style={{ margin: 0 }}>
 					<span>
 						{channalName}
 						{!isPrivateChannel && (

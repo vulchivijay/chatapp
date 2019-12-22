@@ -74,11 +74,10 @@ class Channels extends React.Component {
 				key={channel.id}
 				onClick={() => this.changeChannel(channel)}
 				name={channel.name}
-				style={{ opacity: 0.7 }}
 				active={channel.id === this.state.activeChannel}
 			>
 				{ this.getNoficationCount(channel) && (
-					<Label color="red">{this.getNoficationCount(channel)}</Label>
+					<Label color="danger">{this.getNoficationCount(channel)}</Label>
 				)}
 				# { channel.name }
 			</Menu.Item>
@@ -168,7 +167,6 @@ class Channels extends React.Component {
 			.then(() => {
 				this.setState({channelName: '', channelDetails: ''});
 				this.closeModal();
-				console.log('channel added');
 			})
 			.catch(err => {
 				console.log(err);
