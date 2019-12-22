@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { setUserPosts } from './../../actions';
 import firebase from './../../firebase';
 
+import MetaPanel from './../MetaPanel/MetaPanel';
 import MessagesHeader from './MessagesHeader';
 import MessageForm from './MessageForm';
 import Message from './Message';
@@ -26,7 +27,9 @@ class Messages extends React.Component {
 		usersRef: firebase.database().ref('users'),
 		typingUsers: [],
 		typingRef: firebase.database().ref('typing'),
-		connectedRef: firebase.database().ref('.info/connected')
+		connectedRef: firebase.database().ref('.info/connected'),
+		userPosts: this.props.userPosts,
+		openChannelInfo: false
 	}
 
 	componentDidMount() {
@@ -127,8 +130,7 @@ class Messages extends React.Component {
 			}
 			return acc;
 		}, []);
-		const plural = uniqueUsers.length > 1 || uniqueUsers.length === 0;
-		const numUniqueUsers = `${uniqueUsers.length} user${plural ? "s" : ""}`
+		const numUniqueUsers = `${uniqueUsers.length}`
 		this.setState({numUniqueUsers});
 	}
 
@@ -171,6 +173,17 @@ class Messages extends React.Component {
 		this.setState(prevState => ({
 			isChannelStarred: !prevState.isChannelStarred
 		}), () => this.starChannel());
+	}
+
+	handleChannelInfo = () => {
+		console.log('test 0: ', this.state.openChannelInfo);
+		if (this.state.openChannelInfo) {
+			this.setState({ openChannelInfo: false });
+			console.log('test 1: ', this.state.openChannelInfo);
+		} else {
+			this.setState({ openChannelInfo: true });
+			console.log('test 2: ', this.state.openChannelInfo);
+		}
 	}
 
 	starChannel = () => {
@@ -231,7 +244,9 @@ class Messages extends React.Component {
 			searchLoading,
 			privateChannel,
 			isChannelStarred,
-			typingUsers
+			typingUsers,
+			userPosts,
+			openChannelInfo
 		} = this.state;
 		return (
 			<React.Fragment>
@@ -243,15 +258,28 @@ class Messages extends React.Component {
 					isPrivateChannel={privateChannel}
 					handleChannelStarred={this.handleChannelStarred}
 					isChannelStarred={isChannelStarred}
+					handleChannelInfo={this.handleChannelInfo}
 				/>
-				<Segment className="messages">
-					<Comment.Group>
-						{ searchTerm ? this.displayMessages(searchResults) :
-							this.displayMessages(messages) }
-						{this.displayTypingUsers(typingUsers)}
-						<div ref={node => (this.messagesEnd = node)}></div>
-					</Comment.Group>
-				</Segment>
+				<div className={openChannelInfo ? 'messagesContainer showChannelInfo' : 'messagesContainer'}>
+					<div>
+						<Segment className="messages">
+							<Comment.Group>
+								{ searchTerm ? this.displayMessages(searchResults) :
+									this.displayMessages(messages) }
+								{this.displayTypingUsers(typingUsers)}
+								<div ref={node => (this.messagesEnd = node)}></div>
+							</Comment.Group>
+						</Segment>
+					</div>
+					<div>
+						<MetaPanel
+				          key={channel && channel.id}
+				          userPosts={userPosts}
+				          currentChannel={channel}
+				          isPrivateChannel={privateChannel}
+				        />
+			        </div>
+				</div>
 				<MessageForm
 					messagesRef={messagesRef}
 					currentChannel={channel}

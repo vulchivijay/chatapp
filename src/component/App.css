@@ -50,16 +50,43 @@ body,
 	box-shadow: none;
 	border: none;
 }
-.chatPannel .ui.segment:first-child {
+.chatPannel .ui.segment.messagesHeader {
 	height: 66px;
 	border-radius: 0;
 	border-bottom: 1px solid #ddd;
 }
+.messagesHeader .ui.header .sub.header {
+	margin-top: 5px;
+	font-size: 14px;
+}
 /* Messages js */
-.chatPannel .ui.segment.messages {
+.chatPannel .messagesContainer {
 	height: calc(100% - 150px);
+}
+.messagesContainer > div {
+	height: 100%;
 	overflow: hidden;
 	overflow-y: auto;
+}
+.messagesContainer > div {
+	float: left;
+}
+.messagesContainer > div:first-child {
+	width: 100%;
+}
+.messagesContainer > div:last-child {
+	width: 0;
+}
+.messagesContainer.showChannelInfo > div:first-child {
+	width: 75%;
+	border-right: 1px solid #ddd;
+}
+.messagesContainer.showChannelInfo > div:last-child {
+	width: 25%;
+}
+
+.ui.segment.messages .ui.comments {
+	max-width: 100%;
 }
 
 /* message form js*/
@@ -99,6 +126,17 @@ body,
 /* progress bar */
 .progress__bar {
 	margin: .3em 0 0 0 !important;
+}
+
+/* metapanel styles */
+.chatPannel .ui.segment.channelInfo {
+	padding: 0;
+}
+.channelInfo .ui.styled.accordion,
+.channelInfo .ui.styled.accordion .accordion {
+	box-shadow: none;
+	border-radius: 0;
+    border-bottom: 1px solid #ddd;
 }
 
 /* typing js */

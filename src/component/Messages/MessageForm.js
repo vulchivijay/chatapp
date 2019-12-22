@@ -1,7 +1,7 @@
 import React from 'react';
 import uuidv4 from 'uuid/v4';
 import firebase from './../../firebase';
-import { Segment, Button, TextArea, Icon } from 'semantic-ui-react';
+import { Segment, Button, TextArea } from 'semantic-ui-react';
 
 import FileModal from './FileModal';
 import ProgressBar from './ProgressBar';
@@ -173,13 +173,12 @@ class MessageForm extends React.Component {
 				/>
 				<Button.Group icon className="btn-group">
 					<Button
-						color="teal"
 						disabled={uploadState === "uploading"}
 						onClick={this.openModal}
-						icon="cloud upload"
+						icon="attach"
 					/>
 					<Button
-						color="orange"
+						color="green"
 						onClick={this.sendMessage}
 						disabled={loading}
 						icon="send"
