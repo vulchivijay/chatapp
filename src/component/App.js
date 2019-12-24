@@ -19,7 +19,7 @@ const App = ({ currentUser, currentChannel, isPrivateChannel, userPosts }) => (
       </Grid.Column>
       <Grid.Column className="chatPannel">
         <Messages
-          key={ currentChannel && currentChannel.id }
+          key={currentChannel && currentChannel.id}
           currentChannel={currentChannel}
           currentUser={currentUser}
           isPrivateChannel={isPrivateChannel}

@@ -29,10 +29,9 @@ class MessageForm extends React.Component {
 		this.setState({[event.target.name]: event.target.value });
 	}
 
-	handleKeyDown = () => {
+	handleKeyUp = () => {
 		const { message, typingRef, channel, user } = this.state;
-
-		if(message) {
+		if(message && message !== '') {
 			typingRef
 				.child(channel.id)
 				.child(user.uid)
@@ -80,7 +79,7 @@ class MessageForm extends React.Component {
 						.remove();
 				})
 				.catch(err => {
-					console.log(err);
+					console.error(err);
 					this.setState({
 						loading: false,
 						errors: this.state.errors.concat(err)
@@ -94,12 +93,9 @@ class MessageForm extends React.Component {
 	}
 
 	getPath = () => {
-		console.log('test 0');
 		if (this.props.isPrivateChannel) {
-			console.log('test 1');
 			return `chat/private-${this.state.channel.id}`;
 		} else {
-			console.log('test 2');
 			return 'chat/public';
 		}
 	}
@@ -165,7 +161,7 @@ class MessageForm extends React.Component {
 					name="message"
 					value={message}
 					onChange={this.handleChange}
-					onKeyDown={this.handleKeyDown}
+					onKeyUp={this.handleKeyUp}
 					className={
 						errors.some(error => error.message.includes('message')) ? 'error': ''
 					}

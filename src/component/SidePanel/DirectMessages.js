@@ -11,7 +11,8 @@ class DirectMessages extends React.Component {
 		usersRef: firebase.database().ref('users'),
 		connectedRef: firebase.database().ref('.info/connected'),
 		presenceRef: firebase.database().ref('presence'),
-		activeChannel: ''
+		activeChannel: '',
+		typingRef: firebase.database().ref('typing')
 	}
 
 	componentDidMount() {
@@ -84,7 +85,7 @@ class DirectMessages extends React.Component {
 	getChannelId = userId => {
 		const currentUserId = this.state.user.uid;
 		return userId < currentUserId ?
-			`${userId}/${currentUserId}` : `${currentUserId}/${userId}}`;
+			`${userId}/${currentUserId}` : `${currentUserId}/${userId}`;
 	}
 
 	setActiveChannel = userId => {
@@ -97,8 +98,7 @@ class DirectMessages extends React.Component {
 		return (
 			<Menu.Menu className="menu">
 				<Menu.Item>
-					<span>Direct messages</span>{" "}
-					({ users.length })
+					<span>Direct messages</span>{" "}({ users.length })
 				</Menu.Item>
 				{ users.map(user => (
 					<Menu.Item

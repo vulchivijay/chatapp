@@ -87,7 +87,7 @@ class Messages extends React.Component {
 						}
 					})
 			}
-		});
+		})
 	}
 
 	addUserStarredListeners = (channelId, userId) => {
@@ -176,13 +176,10 @@ class Messages extends React.Component {
 	}
 
 	handleChannelInfo = () => {
-		console.log('test 0: ', this.state.openChannelInfo);
 		if (this.state.openChannelInfo) {
 			this.setState({ openChannelInfo: false });
-			console.log('test 1: ', this.state.openChannelInfo);
 		} else {
 			this.setState({ openChannelInfo: true });
-			console.log('test 2: ', this.state.openChannelInfo);
 		}
 	}
 
@@ -224,13 +221,13 @@ class Messages extends React.Component {
 		return channel ? `${this.state.privateChannel ? '@' : '#'}${channel.name}` : '';
 	}
 
-	displayTypingUsers = users => {
+	displayTypingUsers = users => (
 		users.length > 0 && users.map(user => (
-			<div style={{ display: "flex", alignItems: "center", marginBottom: "0.2em" }} key={user.id}>
-				<span className="user__typing">{users.name} is typing</span> <Typing />
-			</div>	
+			<div style={{ display: "flex", alignItems: "center", marginBottom: '0.2em' }} key={user.id}>
+				<span className="user__typing">{user.name} is typing</span> <Typing />
+			</div>
 		))
-	}
+	)
 
 	render () {
 		const {
@@ -266,7 +263,7 @@ class Messages extends React.Component {
 							<Comment.Group>
 								{ searchTerm ? this.displayMessages(searchResults) :
 									this.displayMessages(messages) }
-								{this.displayTypingUsers(typingUsers)}
+								{ this.displayTypingUsers(typingUsers) }
 								<div ref={node => (this.messagesEnd = node)}></div>
 							</Comment.Group>
 						</Segment>
