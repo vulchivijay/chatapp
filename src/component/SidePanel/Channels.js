@@ -34,6 +34,8 @@ class Channels extends React.Component {
 	changeChannel = channel => {
 		this.setActiveChannel(channel);
 		this.state.typingRef
+			.child(this.state.channel.id)
+			.child(this.state.user.uid)
 			.remove();
 		this.clearNotifications();
 		this.props.setCurrentChannel(channel);
@@ -132,7 +134,10 @@ class Channels extends React.Component {
 
 	removeListeners = () => {
 		this.state.channelsRef.off();
-	}
+		this.state.channels.forEach(channel => {
+			this.state.messagesRef.child(channel.id).off();
+		});
+	};
 
 	setFirstChannel = () => {
 		const firstChannel = this.state.channels[0];

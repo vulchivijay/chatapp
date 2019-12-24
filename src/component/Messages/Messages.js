@@ -29,12 +29,14 @@ class Messages extends React.Component {
 		typingRef: firebase.database().ref('typing'),
 		connectedRef: firebase.database().ref('.info/connected'),
 		userPosts: this.props.userPosts,
-		openChannelInfo: false
+		openChannelInfo: false,
+		listeners: []
 	}
 
 	componentDidMount() {
-		const { channel, user } = this.state;
+		const { channel, user, listeners } = this.state;
 		if (channel && user) {
+			this.removeListeners(listeners)
 			this.addListeners(channel.id);
 			this.addUserStarredListeners(channel.id, user.uid);
 		}
@@ -43,6 +45,28 @@ class Messages extends React.Component {
 	componentDidUpdate(prevProps, prevState) {
 		if (this.messagesEnd) {
 			this.scrollToBottom();
+		}
+	}
+
+	componentWillUnmount () {
+		this.removeListeners(this.state.listeners);
+		this.state.connectedRef.off();
+	}
+
+	removeListeners = listeners => {
+		listeners.forEach(listener => {
+			listener.ref.child(listener.id).off(listener.event);	
+		});
+	}
+
+	addToListeners = (id, ref, event) => {
+		const index = this.state.listeners.findIndex(listener => {
+			return listener.id === id && listener.ref === ref && listener.event === event;
+		})
+
+		if (index === -1) {
+			const newListener = { id, ref, event };
+			this.setState({ listeners: this.state.listeners.concat(newListener) });
 		}
 	}
 
@@ -65,7 +89,9 @@ class Messages extends React.Component {
 				})
 				this.setState({ typingUsers });
 			}
-		})
+		});
+
+		this.addToListeners(channelId, this.state.typingRef, 'child_added');
 
 		this.state.typingRef.child(channelId).on('child_removed', snap => {
 			const index = typingUsers.findIndex(user => user.id === snap.key);
@@ -73,7 +99,9 @@ class Messages extends React.Component {
 				typingUsers = typingUsers.filter(user => user.id !== snap.key);
 				this.setState({ typingUsers });
 			}
-		})
+		});
+
+		this.addToListeners(channelId, this.state.typingRef, 'child_removed');
 
 		this.state.connectedRef.on('value', snap => {
 			if (snap.val() === true) {
@@ -112,11 +140,13 @@ class Messages extends React.Component {
 			this.setState({
 				messages: loadedMessages,
 				messagesLoading: false
-			})
-		})
-		this.countUniqueUsers(loadedMessages);
-		this.countUsersPosts(loadedMessages);
-	}
+			});
+			this.countUniqueUsers(loadedMessages);
+			this.countUsersPosts(loadedMessages);
+		});
+
+		this.addToListeners(channelId, ref, 'child_added');
+	};
 
 	getMessagesRef = () => {
 		const { messagesRef, privateMessagesRef, privateChannel } = this.state;
