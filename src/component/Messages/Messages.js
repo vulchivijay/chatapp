@@ -42,15 +42,19 @@ class Messages extends React.Component {
 		}
 	}
 
+	componentWillUnmount () {
+		this.removeListeners(this.state.listeners);
+		this.state.connectedRef.off();
+	}
+
 	componentDidUpdate(prevProps, prevState) {
 		if (this.messagesEnd) {
 			this.scrollToBottom();
 		}
 	}
 
-	componentWillUnmount () {
-		this.removeListeners(this.state.listeners);
-		this.state.connectedRef.off();
+	scrollToBottom = () => {
+		this.messagesEnd.scrollIntoView({ behavior: 'smooth'});
 	}
 
 	removeListeners = listeners => {
@@ -68,10 +72,6 @@ class Messages extends React.Component {
 			const newListener = { id, ref, event };
 			this.setState({ listeners: this.state.listeners.concat(newListener) });
 		}
-	}
-
-	scrollToBottom = () => {
-		this.messagesEnd.scrollIntoView({ behavior: 'smooth'});
 	}
 
 	addListeners = channelId => {

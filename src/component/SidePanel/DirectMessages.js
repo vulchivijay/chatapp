@@ -99,6 +99,7 @@ class DirectMessages extends React.Component {
 	}
 
 	setActiveChannel = userId => {
+		// remove active class in channels, starred channels
 		this.setState({ activeChannel: userId })
 	}
 
@@ -110,20 +111,22 @@ class DirectMessages extends React.Component {
 				<Menu.Item>
 					<span>Direct messages</span>{" "}({ users.length })
 				</Menu.Item>
-				{ users.map(user => (
-					<Menu.Item
-						key={user.uid}
-						active={user.uid === activeChannel}
-						onClick={() => this.changeChannel(user)}
-						style={{ fontStyle: 'italic'}}
-					>
-						<Icon
-							name="circle"
-							color={this.isUserOnline(user) ? 'green' : 'red'}
-						/>
-						<span>@ {user.name}</span>
-					</Menu.Item>
-				)) }
+				<div className="scrollBar-container">
+					{ users.map(user => (
+						<Menu.Item
+							key={user.uid}
+							active={user.uid === activeChannel}
+							onClick={() => this.changeChannel(user)}
+							style={{ fontStyle: 'italic'}}
+						>
+							<Icon
+								name="circle"
+								color={this.isUserOnline(user) ? 'green' : 'red'}
+							/>
+							<span>@ {user.name}</span>
+						</Menu.Item>
+					)) }
+				</div>
 			</Menu.Menu>
 		)
 	}

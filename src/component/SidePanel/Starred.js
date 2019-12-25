@@ -80,7 +80,9 @@ class Starred extends React.Component {
 					({ starredChannels.length })
 				</Menu.Item>
 				{/* Channels */}
-				{this.displayChannels(starredChannels)}
+				<div className="scrollBar-container">
+					{this.displayChannels(starredChannels)}
+				</div>
 			</Menu.Menu>
 		)
 	}

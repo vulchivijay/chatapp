@@ -65,24 +65,35 @@ class Channels extends React.Component {
 	}
 
 	setActiveChannel = channel => {
+		// remove active class in direct messages, starred channels
 		this.setState({ activeChannel: channel.id })
 	}
 
-	displayChannels = channels => (
+	displayChannels = (channels, user) => (
 		channels.length > 0 && channels.map(channel => (
-			<Menu.Item
-				key={channel.id}
-				onClick={() => this.changeChannel(channel)}
-				name={channel.name}
-				active={channel.id === this.state.activeChannel}
-			>
-				{ this.getNoficationCount(channel) && (
-					<Label color="danger">{this.getNoficationCount(channel)}</Label>
-				)}
-				# { channel.name }
-			</Menu.Item>
+			(channel.createdBy.name === user.displayName) ?
+				<Menu.Item
+					key={channel.id}
+					onClick={() => this.changeChannel(channel)}
+					name={channel.name}
+					active={channel.id === this.state.activeChannel}
+				>
+					{ this.getNoficationCount(channel) && (
+						<Label color="red">{this.getNoficationCount(channel)}</Label>
+					)}
+					# { channel.name }
+				</Menu.Item>
+			: ''
 		))
 	)
+
+	channelsCount = (channels, user) => {
+		let count = 0;
+		channels.length > 0 && channels.map(channel => (
+			(channel.createdBy.name === user.displayName) ? count++ : ''
+		))
+		return count;
+	}
 
 	componentDidMount () {
 		this.addListeners();
@@ -183,17 +194,19 @@ class Channels extends React.Component {
 	closeModal = () => this.setState({ modal: false });
 
 	render () {
-		const { channels, modal } = this.state;
+		const { channels, modal, user } = this.state;
 
 		return (
 			<React.Fragment>
 				<Menu.Menu className="menu">
-					<Menu.Item>
+					<Menu.Item style={{height: '32px'}}>
 						<span> Channels </span>{" "}
-						({ channels.length }) <Icon name="add circle" onClick={this.openModal}/>
+						({ this.channelsCount(channels, user)}) <Icon name="add circle" onClick={this.openModal}/>
 					</Menu.Item>
 					{/* Channels */}
-					{this.displayChannels(channels)}
+					<div className="scrollBar-container">
+						{this.displayChannels(channels, user)}
+					</div>
 				</Menu.Menu>
 				{/* Modal popup */}
 				<Modal basic open={modal} onClose={this.closeModal}>
