@@ -32,16 +32,17 @@ body,
 	font-size: 16px;
 	margin: 0;
 	border-radius: 0;
-	background-color: #051e34;
+	background-color: #001796;
 }
 .asidePannel .ui.vertical.inverted.menu .menu .item {
 	color: rgba(255, 255, 255, 0.8);
 }
-.asidePannel .ui.vertical.inverted.menu .menu .item {
+.asidePannel .ui.vertical.inverted.menu .menu > .item {
 	font-weight: bold;
 }
-.asidePannel .ui.vertical.menu .item>i.icon.add {
-	font-size: 18px;
+.asidePannel .ui.vertical.menu .item > i.icon.users,
+.asidePannel .ui.vertical.menu .item > i.icon.address.book {
+	font-size: 16px;
 	cursor: pointer;
 }
 .chatPannel .ui.segment {
@@ -121,7 +122,12 @@ body,
 .message__image {
 	padding: 1em;
 }
-
+.channels-list a.item .icon {
+	font-size: 12px;
+}
+.message-users-list i.icon {
+	line-height: 1.1;
+}
 /* progress bar */
 .progress__bar {
 	margin: .3em 0 0 0 !important;

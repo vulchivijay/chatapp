@@ -5,7 +5,7 @@ class MessagesHeader extends React.Component {
 
 	render() {
 		const {
-			channalName,
+			channelName,
 			numUniqueUsers,
 			handleSearchChange,
 			searchLoading,
@@ -20,8 +20,8 @@ class MessagesHeader extends React.Component {
 				{/* Channel title */}
 				<Header fluid="true" as="h4" floated="left" style={{ margin: 0 }}>
 					<span>
-						{channalName}{" "}
-						{!isPrivateChannel && (
+						{channelName}{" "}
+						{!isPrivateChannel && channelName && (
 							<Icon
 								onClick={handleChannelInfo}
 								name="info circle"
@@ -29,16 +29,17 @@ class MessagesHeader extends React.Component {
 						)}
 					</span>
 					<Header.Subheader>
-						{!isPrivateChannel && (
+						{!isPrivateChannel && channelName && (
 							<Icon
 								onClick={handleChannelStarred}
 								name={isChannelStarred ? 'star' : 'star outline'}
 								color={isChannelStarred ? 'yellow' : 'black'}
 							/>
 						)}
-						{!isPrivateChannel && (
+						{!isPrivateChannel && channelName && (
 							<Icon name="user outline"/>
-						)} {numUniqueUsers}
+						)}
+						{!isPrivateChannel && channelName ? numUniqueUsers : ''}
 						
 					</Header.Subheader>
 				</Header>

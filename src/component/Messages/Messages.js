@@ -278,7 +278,7 @@ class Messages extends React.Component {
 		return (
 			<React.Fragment>
 				<MessagesHeader
-					channalName={this.displayChannelName(channel)}
+					channelName={this.displayChannelName(channel)}
 					numUniqueUsers={numUniqueUsers}
 					handleSearchChange={this.handleSearchChange}
 					searchLoading={searchLoading}

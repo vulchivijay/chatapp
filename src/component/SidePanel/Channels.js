@@ -71,7 +71,7 @@ class Channels extends React.Component {
 
 	displayChannels = (channels, user) => (
 		channels.length > 0 && channels.map(channel => (
-			(channel.createdBy.name === user.displayName) ?
+			(user.uid === channel.createdBy.id) ?
 				<Menu.Item
 					key={channel.id}
 					onClick={() => this.changeChannel(channel)}
@@ -82,6 +82,7 @@ class Channels extends React.Component {
 						<Label color="red">{this.getNoficationCount(channel)}</Label>
 					)}
 					# { channel.name }
+					<Icon name="user outline" title="add user"/>
 				</Menu.Item>
 			: ''
 		))
@@ -151,13 +152,18 @@ class Channels extends React.Component {
 	};
 
 	setFirstChannel = () => {
-		const firstChannel = this.state.channels[0];
-		if (this.state.firstLoad && this.state.channels.length > 0) {
-			this.props.setCurrentChannel(firstChannel);
-			this.setActiveChannel(firstChannel);
-			this.setState({ channel: firstChannel });
-		}
-		this.setState({ firstLoad: false });
+		let firstChannel;
+		let channelsNotEmpty = this.state.firstLoad && this.state.channels.length > 0 ? true : false
+		this.state.channels.forEach( (channel, index) => {
+			if ( channelsNotEmpty && this.state.user.uid === channel.createdBy.id ) {
+				firstChannel = this.state.channels[index];
+				this.props.setCurrentChannel(firstChannel);
+				this.setActiveChannel(firstChannel);
+				this.setState({ channel: firstChannel });
+				this.setState({ firstLoad: false });
+				return false;
+			}
+		});
 	}
 
 	addChannel = () => {
@@ -170,6 +176,7 @@ class Channels extends React.Component {
 			name: channelName,
 			details: channelDetails,
 			createdBy: {
+				id: user.uid,
 				name: user.displayName,
 				avatar: user.photoURL
 			}
@@ -183,7 +190,7 @@ class Channels extends React.Component {
 				this.closeModal();
 			})
 			.catch(err => {
-				console.log(err);
+				console.error(err);
 			});
 	}
 
@@ -199,12 +206,12 @@ class Channels extends React.Component {
 		return (
 			<React.Fragment>
 				<Menu.Menu className="menu">
-					<Menu.Item style={{height: '32px'}}>
+					<Menu.Item>
 						<span> Channels </span>{" "}
-						({ this.channelsCount(channels, user)}) <Icon name="add circle" onClick={this.openModal}/>
+						({ this.channelsCount(channels, user)}) <Icon name="users" onClick={this.openModal} title="add channel"/>
 					</Menu.Item>
 					{/* Channels */}
-					<div className="scrollBar-container">
+					<div className="channels-list scrollBar-container">
 						{this.displayChannels(channels, user)}
 					</div>
 				</Menu.Menu>

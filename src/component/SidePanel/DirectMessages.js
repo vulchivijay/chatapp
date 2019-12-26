@@ -110,14 +110,14 @@ class DirectMessages extends React.Component {
 			<Menu.Menu className="menu">
 				<Menu.Item>
 					<span>Direct messages</span>{" "}({ users.length })
+					<Icon name="address book outline" title="Find contacts"/>
 				</Menu.Item>
-				<div className="scrollBar-container">
+				<div className="message-users-list scrollBar-container">
 					{ users.map(user => (
 						<Menu.Item
 							key={user.uid}
 							active={user.uid === activeChannel}
 							onClick={() => this.changeChannel(user)}
-							style={{ fontStyle: 'italic'}}
 						>
 							<Icon
 								name="circle"
