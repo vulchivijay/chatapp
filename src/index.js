@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import App from './component/App';
 import Login from './component/Auth/Login';
 import Register from './component/Auth/Register';
+import New from './component/Auth/New';
 import Spinner from './Spinner';
 import registerServiceWorker from './registerServiceWorker';
 
@@ -49,6 +50,7 @@ class Root extends React.Component {
         <Route exact path='/' component={App} />
         <Route path='/login' component={Login} />
         <Route path='/register' component={Register} />
+        <Route path='/new' component={New} />
       </Switch>
     );
   }

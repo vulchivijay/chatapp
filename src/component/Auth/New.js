@@ -83,9 +83,9 @@ class Register extends React.Component {
       }
     });
     if (returnFlag) {
-      returnFlag = true;
-    } else {
       returnFlag = false;
+    } else {
+      returnFlag = true;
     }
     return returnFlag;
   }
@@ -132,31 +132,49 @@ class Register extends React.Component {
   }
 
   saveUser = createdUser => {
-    let returnFlag = false;
-    const { workplacename } = this.state;
+    const { workplaceRef, workplacename, email } = this.state;
+    const key = workplaceRef.push().key;
     const userId = createdUser.user.uid;
     const userName = createdUser.user.displayName;
     const userAvatar = createdUser.user.photoURL;
-    let dbWorkplaceId;
-    let dbWorkplaceName;
 
-    this.state.workplaces.forEach((workplace) => {
-      if (workplace.name === workplacename) {
-        dbWorkplaceId = workplace.id;
-        dbWorkplaceName = workplace.name;
-        returnFlag = true;
+    const newWorkplace = {
+      id: key,
+      name: workplacename,
+      createdBy: {
+        id: userId,
+        name: userName,
+        avatar: userAvatar
+      },
+      users: {
+        [userId]: {
+          id: userId,
+          name: userName,
+          email: email,
+          avatar: userAvatar
+        }
       }
-    });
+    }
 
-    return returnFlag ? this.state.userRef.child(userId).set({
+    workplaceRef
+      .child(key)
+      .update(newWorkplace)
+      .then(() => {
+        this.setState({workplacename: '',});
+      })
+      .catch(err => {
+        console.error(err);
+      });
+
+    return this.state.userRef.child(userId).set({
       name: userName,
       avatar: userAvatar,
       email: this.state.email,
       workplace: {
-        id: dbWorkplaceId,
-        name: dbWorkplaceName
+        id: newWorkplace.id,
+        name: newWorkplace.name
       }
-    }) : "";
+    });
   }
 
   render() {
@@ -166,13 +184,13 @@ class Register extends React.Component {
         <Grid.Column style={{ maxWidth: 450 }}>
           <Header as="h1" icon color="orange" textAlign="center">
             <Icon name="user plus" color="orange"/>
-            Create workplace user account
+            Create workplace account
           </Header>
           <Form onSubmit={this.handleSubmit} size="large">
             <Segment stacked>
               <Form.Input fluid name="username" icon="user" iconPosition="left" placeholder="User name" onChange={this.handleChange} value={username} type="text"/>
               <Form.Input fluid name="email" icon="mail" iconPosition="left" placeholder="Email address" onChange={this.handleChange} value={email} className={this.handleInputError(errors, "email")} type="email"/>
-              <Form.Input fluid name="workplacename" icon="group" iconPosition="left" placeholder="Existing workplace name" onChange={this.handleChange} value={workplacename} type="text"/>
+              <Form.Input fluid name="workplacename" icon="group" iconPosition="left" placeholder="Workplace name" onChange={this.handleChange} value={workplacename} type="text"/>
               <Form.Input fluid name="password" icon="lock" iconPosition="left" placeholder="Password" onChange={this.handleChange} value={password} className={this.handleInputError(errors, "password")} type="password"/>
               <Form.Input fluid name="passwordConfirmation" icon="repeat" iconPosition="left" placeholder="Password Confirmation" onChange={this.handleChange} value={passwordConfirmation} className={this.handleInputError(errors, "password")} type="password"/>
               <Button disabled={loading} className={loading? 'loading': ''} color="orange" fluid size="large">Submit</Button>

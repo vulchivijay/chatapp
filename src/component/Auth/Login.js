@@ -102,14 +102,15 @@ class Login extends React.Component {
           </Header>
           <Form onSubmit={this.handleSubmit} size="large">
             <Segment stacked>
-              <Form.Input fluid name="workplacename" icon="group" iconPosition="left" placeholder="Workplace name" onChange={this.handleChange} value={workplacename} className={this.handleInputError(errors, "workplace")} type="text"/>
+              <Form.Input fluid name="workplacename" icon="group" iconPosition="left" placeholder="Your workplace name" onChange={this.handleChange} value={workplacename} className={this.handleInputError(errors, "workplace")} type="text"/>
               <Form.Input fluid name="email" icon="mail" iconPosition="left" placeholder="Email address" onChange={this.handleChange} value={email} className={this.handleInputError(errors, "email")} type="email"/>
               <Form.Input fluid name="password" icon="lock" iconPosition="left" placeholder="Password" onChange={this.handleChange} value={password} className={this.handleInputError(errors, "password")} type="password"/>
               <Button disabled={loading} className={loading? 'loading': ''} color="violet" fluid size="large">Submit</Button>
             </Segment>
           </Form>
           {errors.length > 0 && (<Message error><b>Error: </b>{this.displayErrors(errors)} </Message>)}
-          <Message>Don't have an workplace? <Link to="/register">Create workplace</Link></Message>
+          <Message>Don't have a workplace user? <Link to="/register">Create workplace user</Link></Message>
+          <Message>Don't have a workplace? <Link to="/new">Create workplace</Link></Message>
         </Grid.Column>
       </Grid>
     );
