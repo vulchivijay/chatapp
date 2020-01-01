@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import App from './component/App';
 import Login from './component/Auth/Login';
 import Register from './component/Auth/Register';
+import New from './component/Auth/New';
 import Spinner from './Spinner';
 import registerServiceWorker from './registerServiceWorker';
 
@@ -22,7 +23,11 @@ import { setUser, clearUser } from './actions';
 const store = createStore(rootReducer, composeWithDevTools());
 
 class Root extends React.Component {
+  _isMounted = false;
+
   componentDidMount () {
+    this._isMounted = true;
+
     firebase.auth().onAuthStateChanged( user => {
       if (user) {
         // console.log(user);
@@ -34,12 +39,18 @@ class Root extends React.Component {
       }
     })
   }
+  
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
+
   render () {
     return this.props.isLoading ? <Spinner /> : (
       <Switch>
         <Route exact path='/' component={App} />
         <Route path='/login' component={Login} />
         <Route path='/register' component={Register} />
+        <Route path='/new' component={New} />
       </Switch>
     );
   }

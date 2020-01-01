@@ -12,12 +12,13 @@ class DirectMessages extends React.Component {
 		connectedRef: firebase.database().ref('.info/connected'),
 		presenceRef: firebase.database().ref('presence'),
 		activeChannel: '',
-		typingRef: firebase.database().ref('typing')
+		typingRef: firebase.database().ref('typing'),
+		userWorkplaceName: ""
 	}
 
 	componentDidMount() {
 		if (this.state.user) {
-			this.addListeners(this.state.user.uid);
+			this.userWorkplaceListeners();
 		}
 	}
 
@@ -31,10 +32,19 @@ class DirectMessages extends React.Component {
 		this.state.connectedRef.off();
 	}
 
+	userWorkplaceListeners = () => {
+    this.state.usersRef.on('child_added', snap => {
+      if (snap.key === this.state.user.uid) {
+        this.setState({ userWorkplaceName: snap.val().workplace.name})
+				this.addListeners(this.state.user.uid);
+      }
+    });
+  }
+
 	addListeners = currentUserUid => {
 		let loadedUsers = [];
 		this.state.usersRef.on('child_added', snap => {
-			if (currentUserUid !== snap.key) {
+			if (this.state.userWorkplaceName === snap.val().workplace.name) {
 				let user = snap.val();
 				user['uid'] = snap.key;
 				user['status'] = 'offline';
@@ -56,13 +66,13 @@ class DirectMessages extends React.Component {
 		});
 
 		this.state.presenceRef.on('child_added', snap => {
-			if (currentUserUid !== snap.key) {
+			if (currentUserUid !== snap.key || currentUserUid === snap.key) {
 				this.addStatusToUser(snap.key);
 			}
 		});
 
 		this.state.presenceRef.on('child_removed', snap => {
-			if (currentUserUid !== snap.key) {
+			if (currentUserUid !== snap.key || currentUserUid === snap.key) {
 				this.addStatusToUser(snap.key, false);
 			}
 		});
@@ -110,7 +120,7 @@ class DirectMessages extends React.Component {
 			<Menu.Menu className="menu">
 				<Menu.Item>
 					<span>Direct messages</span>{" "}({ users.length })
-					<Icon name="address book outline" title="Find contacts"/>
+					{/*<Icon name="address book outline" title="Find contacts"/>*/}
 				</Menu.Item>
 				<div className="message-users-list scrollBar-container">
 					{ users.map(user => (

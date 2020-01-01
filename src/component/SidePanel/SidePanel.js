@@ -17,7 +17,6 @@ class SidePanel extends React.Component {
         vertical
       >
         <UserPanel currentUser={currentUser} />
-        <Divider style={{ marginTop: 0}}/>
         <Starred currentUser={currentUser} />
         <Divider/>
         <Channels currentUser={currentUser} />
