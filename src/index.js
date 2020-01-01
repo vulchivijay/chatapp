@@ -22,7 +22,11 @@ import { setUser, clearUser } from './actions';
 const store = createStore(rootReducer, composeWithDevTools());
 
 class Root extends React.Component {
+  _isMounted = false;
+
   componentDidMount () {
+    this._isMounted = true;
+
     firebase.auth().onAuthStateChanged( user => {
       if (user) {
         // console.log(user);
@@ -34,6 +38,11 @@ class Root extends React.Component {
       }
     })
   }
+  
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
+
   render () {
     return this.props.isLoading ? <Spinner /> : (
       <Switch>

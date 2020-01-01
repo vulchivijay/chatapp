@@ -51,7 +51,7 @@ class Login extends React.Component {
         <Grid.Column style={{ maxWidth: 450 }}>
           <Header as="h1" icon color="violet" textAlign="center">
             <Icon name="user" color="violet"/>
-            Login to Roomy
+            Login to your workplace
           </Header>
           <Form onSubmit={this.handleSubmit} size="large">
             <Segment stacked>
@@ -61,7 +61,7 @@ class Login extends React.Component {
             </Segment>
           </Form>
           {errors.length > 0 && (<Message error><b>Error: </b>{this.displayErrors(errors)} </Message>)}
-          <Message>Don't have an account? <Link to="/register">Register</Link></Message>
+          <Message>Don't have an workplace? <Link to="/register">Create workplace</Link></Message>
         </Grid.Column>
       </Grid>
     );
