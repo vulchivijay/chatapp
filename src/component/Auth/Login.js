@@ -28,7 +28,6 @@ class Login extends React.Component {
         this.setState({ workplaces: loadedWorkplaces})
       }
     });
-    console.log('getting data: ', loadedWorkplaces);
   }
 
   displayErrors = errors => errors.map((error, i) => <span key={i}>{error.message}</span>)

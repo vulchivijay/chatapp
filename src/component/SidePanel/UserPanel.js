@@ -1,7 +1,7 @@
 import React from 'react';
 import firebase from './../../firebase';
 import AvatarEditor from 'react-avatar-editor';
-import { Grid, Header, Icon, Dropdown, Image, Modal, Input, Button } from 'semantic-ui-react';
+import { Grid, Header, Icon, Dropdown, Image, Modal, Input, Button, Divider } from 'semantic-ui-react';
 
 class UserPanel extends React.Component {
   state = {
@@ -16,7 +16,20 @@ class UserPanel extends React.Component {
       contentType: 'image/jpeg'
     },
     uploadedCroppedImage: '',
-    usersRef: firebase.database().ref('users')
+    usersRef: firebase.database().ref('users'),
+    userWorkplaceName: ""
+  }
+
+  componentDidMount () {
+    this.userWorkplaceListeners();
+  }
+
+  userWorkplaceListeners = () => {
+    this.state.usersRef.on('child_added', snap => {
+      if (snap.key === this.state.user.uid) {
+        this.setState({ userWorkplaceName: snap.val().workplace.name})
+      }
+    });
   }
 
   openModal = () => this.setState({ modal: true });
@@ -44,7 +57,7 @@ class UserPanel extends React.Component {
       .auth()
       .signOut()
       .then(() => {
-        console.log('signned out!');
+        //console.log('signned out!');
       })
   }
 
@@ -89,7 +102,6 @@ class UserPanel extends React.Component {
         photoURL: this.state.uploadedCroppedImage
       })
       .then(() => {
-        console.log('photoURL updated');
         this.closeModal();
       })
       .catch(err => {
@@ -100,7 +112,7 @@ class UserPanel extends React.Component {
         .child(this.state.user.uid)
         .update({ avatar: this.state.uploadedCroppedImage })
         .then(() => {
-          console.log('user avatar updated');
+          //console.log('user avatar updated');
         })
         .catch(err => {
           console.error(err);
@@ -108,7 +120,7 @@ class UserPanel extends React.Component {
   }
 
   render () {
-    const {user, modal, previewImage, croppedImage} = this.state;
+    const {user, modal, previewImage, croppedImage, userWorkplaceName} = this.state;
     return (
       <Grid style={{margin: 0}}>
         <Grid.Column>
@@ -122,6 +134,9 @@ class UserPanel extends React.Component {
                 </span>
               } options={ this.dropdownOptions() } />
             </Header>
+            <Divider style={{ marginTop: 0}}/>
+            <p style={{color: "white", fontSize: "12px"}}><Icon name="industry"/> {userWorkplaceName} </p>
+            <Divider style={{ margin: 0}}/>
           </Grid.Row>
           {/* user avatar change */}
           <Modal basic open={modal} onClose={this.closeModal}>

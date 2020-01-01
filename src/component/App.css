@@ -143,6 +143,9 @@ body,
 	border-radius: 0;
     border-bottom: 1px solid #ddd;
 }
+.ui.vertical.menu .channels-list .item > i.icon {
+	margin-top: 2px;
+}
 
 /* typing js */
 .user__typing {

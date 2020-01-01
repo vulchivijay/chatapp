@@ -208,7 +208,8 @@ class Channels extends React.Component {
 				<Menu.Menu className="menu">
 					<Menu.Item>
 						<span> Channels </span>{" "}
-						({ this.channelsCount(channels, user)}) <Icon name="users" onClick={this.openModal} title="add channel"/>
+						({ this.channelsCount(channels, user)})
+						{/*<Icon name="users" onClick={this.openModal} title="add channel"/>*/}
 					</Menu.Item>
 					{/* Channels */}
 					<div className="channels-list scrollBar-container">
