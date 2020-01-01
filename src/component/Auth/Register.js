@@ -77,17 +77,16 @@ class Register extends React.Component {
 
   isWorkplaceAvailable = ({ workplacename }) => {
     let returnFlag = false;
-
-    this.state.workplaces.forEach((workplace)=> {
-      console.log('db workplace name: ', workplace.name);
-      console.log('user workplace name: ', workplacename);
-      if (workplace.name !== workplacename) {
+    this.state.workplaces.forEach((workplace) => {
+      if (workplace.name === workplacename) {
         returnFlag = true;
-      } else {
-        returnFlag = false;
       }
     });
-
+    if (returnFlag) {
+      returnFlag = false;
+    } else {
+      returnFlag = true;
+    }
     return returnFlag;
   }
 
