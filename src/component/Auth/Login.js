@@ -28,6 +28,7 @@ class Login extends React.Component {
         this.setState({ workplaces: loadedWorkplaces})
       }
     });
+    console.log('getting data: ', loadedWorkplaces);
   }
 
   displayErrors = errors => errors.map((error, i) => <span key={i}>{error.message}</span>)
@@ -76,12 +77,12 @@ class Login extends React.Component {
         this.state.workplaces.forEach((workplace)=> {
           if (workplace.name === workplacename) {
             returnFlag = true;
-          } else {
-            error = { message: "Workplace does not exit!" };
-            this.setState({ errors: errors.concat(error) });
-            returnFlag = false;
           }
         });
+        if (!returnFlag) {
+          error = { message: "Workplace does not exit!" };
+          this.setState({ errors: errors.concat(error) });
+        }
       }
     }
     return returnFlag;
@@ -90,7 +91,6 @@ class Login extends React.Component {
   isFormEmpty = ({ workplacename, email, password }) => {
     return !workplacename.length || !email.length || !password.length;
   }
-
 
   render() {
     const { email, password, errors, loading, workplacename } = this.state;

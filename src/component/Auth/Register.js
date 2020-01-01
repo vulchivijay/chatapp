@@ -16,7 +16,23 @@ class Register extends React.Component {
     errors: [],
     loading: false,
     userRef: firebase.database().ref('users'),
-    workplaceRef: firebase.database().ref('workplaces')
+    workplaceRef: firebase.database().ref('workplaces'),
+    workplaces: []
+  }
+
+  componentDidMount () {
+    this.workplaceListeners();
+  }
+
+  workplaceListeners = () => {
+    let loadedWorkplaces = [];
+    this.state.workplaceRef.on('child_added', snap => {
+      if (snap.key !== "") {
+        let workplaces = snap.val();
+        loadedWorkplaces.push(workplaces);
+        this.setState({ workplaces: loadedWorkplaces})
+      }
+    });
   }
 
   isFormValid = () => {
@@ -26,6 +42,10 @@ class Register extends React.Component {
     if (this.isFormEmpty(this.state)) {
       // throw error
       error = { message: "Fill all the fields!" };
+      this.setState({ errors: errors.concat(error) });
+      return false;
+    } else if (!this.isWorkplaceAvailable(this.state)) {
+      error = { message: "Workplace name not available!" };
       this.setState({ errors: errors.concat(error) });
       return false;
     } else if (!this.isPasswordValid(this.state)) {
@@ -53,6 +73,22 @@ class Register extends React.Component {
     } else {
       return true;
     }
+  }
+
+  isWorkplaceAvailable = ({ workplacename }) => {
+    let returnFlag = false;
+
+    this.state.workplaces.forEach((workplace)=> {
+      console.log('db workplace name: ', workplace.name);
+      console.log('user workplace name: ', workplacename);
+      if (workplace.name !== workplacename) {
+        returnFlag = true;
+      } else {
+        returnFlag = false;
+      }
+    });
+
+    return returnFlag;
   }
 
   displayErrors = errors => errors.map((error, i) => <span key={i}>{error.message}</span>)
