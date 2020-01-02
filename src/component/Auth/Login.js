@@ -109,8 +109,8 @@ class Login extends React.Component {
             </Segment>
           </Form>
           {errors.length > 0 && (<Message error><b>Error: </b>{this.displayErrors(errors)} </Message>)}
-          <Message>Don't have a workplace user? <Link to="/register">Create workplace user</Link></Message>
-          <Message>Don't have a workplace? <Link to="/new">Create workplace</Link></Message>
+          <Message>My team is on workplace! <Link to="/register">Signup in to your team workplace</Link></Message>
+          <Message>My team is not using workplace yet! <Link to="/new">Create workplace to your team</Link></Message>
         </Grid.Column>
       </Grid>
     );

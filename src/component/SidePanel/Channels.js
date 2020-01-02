@@ -82,7 +82,6 @@ class Channels extends React.Component {
 						<Label color="red">{this.getNoficationCount(channel)}</Label>
 					)}
 					# { channel.name }
-					<Icon name="user outline" title="add user"/>
 				</Menu.Item>
 			: ''
 		))
@@ -209,7 +208,7 @@ class Channels extends React.Component {
 					<Menu.Item>
 						<span> Channels </span>{" "}
 						({ this.channelsCount(channels, user)})
-						{/*<Icon name="users" onClick={this.openModal} title="add channel"/>*/}
+						<Icon name="users" onClick={this.openModal} title="add channel"/>
 					</Menu.Item>
 					{/* Channels */}
 					<div className="channels-list scrollBar-container">

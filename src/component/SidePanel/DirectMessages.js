@@ -13,7 +13,8 @@ class DirectMessages extends React.Component {
 		presenceRef: firebase.database().ref('presence'),
 		activeChannel: '',
 		typingRef: firebase.database().ref('typing'),
-		userWorkplaceName: ""
+		userWorkplaceName: "",
+		loggedInUser: []
 	}
 
 	componentDidMount() {
@@ -43,13 +44,19 @@ class DirectMessages extends React.Component {
 
 	addListeners = currentUserUid => {
 		let loadedUsers = [];
+		let currentLoggedUser = [];
 		this.state.usersRef.on('child_added', snap => {
 			if (this.state.userWorkplaceName === snap.val().workplace.name) {
 				let user = snap.val();
 				user['uid'] = snap.key;
 				user['status'] = 'offline';
-				loadedUsers.push(user);
-				this.setState({ users: loadedUsers });
+				if (this.state.user.uid === snap.key) {
+					currentLoggedUser.push(user);
+					this.setState({ loggedInUser: currentLoggedUser });
+				} else {
+					loadedUsers.push(user);
+					this.setState({ users: loadedUsers });
+				}
 			}
 		});
 
@@ -87,6 +94,15 @@ class DirectMessages extends React.Component {
 		}, []);
 
 		this.setState({ users: updatedUsers});
+
+		const updatedLoggedInUsers = this.state.loggedInUser.reduce((acc, user) => {
+			if (user.uid === userId) {
+				user['status'] = `${connected ? 'online' : 'offline'}`;
+			}
+			return acc.concat(user);
+		}, []);
+
+		this.setState({ loggedInUser: updatedLoggedInUsers});
 	}
 
 	isUserOnline = user => user.status === 'online';
@@ -114,28 +130,43 @@ class DirectMessages extends React.Component {
 	}
 
 	render() {
-		const { users, activeChannel } = this.state;
-
+		const { users, activeChannel, loggedInUser } = this.state;
 		return (
 			<Menu.Menu className="menu">
 				<Menu.Item>
 					<span>Direct messages</span>{" "}({ users.length })
-					{/*<Icon name="address book outline" title="Find contacts"/>*/}
+					<Icon name="address book outline" title="Find contacts"/>
 				</Menu.Item>
 				<div className="message-users-list scrollBar-container">
+					{
+						loggedInUser.map(user => (
+							<Menu.Item
+								key={user.uid}
+								active={user.uid === activeChannel}
+								onClick={() => this.changeChannel(user)}
+							>
+								<Icon
+									name="circle"
+									color={this.isUserOnline(user) ? 'green' : 'red'}
+								/>
+								<span>{user.name } <i>(you)</i></span>
+							</Menu.Item>
+						))
+					}
 					{ users.map(user => (
-						<Menu.Item
-							key={user.uid}
-							active={user.uid === activeChannel}
-							onClick={() => this.changeChannel(user)}
-						>
-							<Icon
-								name="circle"
-								color={this.isUserOnline(user) ? 'green' : 'red'}
-							/>
-							<span>@ {user.name}</span>
-						</Menu.Item>
-					)) }
+							<Menu.Item
+								key={user.uid}
+								active={user.uid === activeChannel}
+								onClick={() => this.changeChannel(user)}
+							>
+								<Icon
+									name="circle"
+									color={this.isUserOnline(user) ? 'green' : 'red'}
+								/>
+								<span>{user.name}</span>
+							</Menu.Item>
+						))
+					}
 				</div>
 			</Menu.Menu>
 		)

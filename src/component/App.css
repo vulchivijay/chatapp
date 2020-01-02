@@ -128,6 +128,10 @@ body,
 .message-users-list i.icon {
 	line-height: 1.1;
 }
+.ui.vertical.menu .message-users-list .item > i.icon {
+	float: left;
+	margin: 0 .5rem 0 0;
+}
 /* progress bar */
 .progress__bar {
 	margin: .3em 0 0 0 !important;
