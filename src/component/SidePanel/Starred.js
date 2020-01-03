@@ -2,7 +2,7 @@ import React from 'react';
 import firebase from './../../firebase';
 import { connect } from 'react-redux';
 import { setCurrentChannel, setPrivateChannel } from './../../actions';
-import { Menu } from 'semantic-ui-react';
+import { Menu, Icon } from 'semantic-ui-react';
 
 class Starred extends React.Component {
 	state = {
@@ -56,7 +56,7 @@ class Starred extends React.Component {
 				name={channel.name}
 				active={channel.id === this.state.activeChannel}
 			>
-				# { channel.name }
+				<Icon name="pin" title="channel is pinned!"/> { channel.name }
 			</Menu.Item>
 		))
 	)
@@ -80,7 +80,7 @@ class Starred extends React.Component {
 					({ starredChannels.length })
 				</Menu.Item>
 				{/* Channels */}
-				<div className="scrollBar-container">
+				<div className="starred-list scrollBar-container">
 					{this.displayChannels(starredChannels)}
 				</div>
 			</Menu.Menu>

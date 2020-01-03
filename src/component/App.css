@@ -128,6 +128,8 @@ body,
 .message-users-list i.icon {
 	line-height: 1.1;
 }
+.ui.vertical.menu .starred-list .item > i.icon,
+.ui.vertical.menu .channels-list .item > i.icon,
 .ui.vertical.menu .message-users-list .item > i.icon {
 	float: left;
 	margin: 0 .5rem 0 0;
@@ -150,7 +152,20 @@ body,
 .ui.vertical.menu .channels-list .item > i.icon {
 	margin-top: 1px;
 }
-
+/* modal */
+.dimmer.active .ui.basic.modal {
+	max-width: 600px;
+	border-radius: 10px;
+	background-color: #ffffff;
+	color: #000000;
+}
+.dimmer.active .ui.basic.modal >.header {
+	color: #000000;
+}
+.dimmer .ui.toggle.checkbox label::before,
+.dimmer .ui.toggle.checkbox label:hover::before {
+	background-color: rgba(0,0,0,0.1);
+}
 /* typing js */
 .user__typing {
 	font-style: italic;
