@@ -297,23 +297,23 @@ class Messages extends React.Component {
 								<div ref={node => (this.messagesEnd = node)}></div>
 							</Comment.Group>
 						</Segment>
+						<MessageForm
+							messagesRef={messagesRef}
+							currentChannel={channel}
+							currentUser={user}
+							isPrivateChannel={privateChannel}
+							getMessagesRef={this.getMessagesRef}
+						/>
 					</div>
 					<div>
 						<MetaPanel
-				          key={channel && channel.id}
-				          userPosts={userPosts}
-				          currentChannel={channel}
-				          isPrivateChannel={privateChannel}
-				        />
-			        </div>
+		          key={channel && channel.id}
+		          userPosts={userPosts}
+		          currentChannel={channel}
+		          isPrivateChannel={privateChannel}
+				    />
+			    </div>
 				</div>
-				<MessageForm
-					messagesRef={messagesRef}
-					currentChannel={channel}
-					currentUser={user}
-					isPrivateChannel={privateChannel}
-					getMessagesRef={this.getMessagesRef}
-				/>
 			</React.Fragment>
 		)
 	}
