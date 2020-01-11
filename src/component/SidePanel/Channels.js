@@ -25,7 +25,6 @@ class Channels extends React.Component {
 
 	handleChange = event => {
 		if (event.target.name === "channelName") {
-			console.log("----");
 			this.setState({ [event.target.name]: event.target.value.replace(/\s/g, '').toLowerCase() });
 		} else {
 			this.setState({ [event.target.name]: event.target.value });
@@ -82,40 +81,52 @@ class Channels extends React.Component {
 		this.setState({ activeChannel: channel.id })
 	}
 
-	displayChannels = (channels, user) => (
+	displayPrivateChannels = (channels, user) => (
 		channels.length > 0 && channels.map(channel => (
-			(this.state.userWorkplaceName === channel.workplaceName) ?
-				<Menu.Item
-					key={channel.id}
-					onClick={() => this.changeChannel(channel)}
-					name={channel.name}
-					active={channel.id === this.state.activeChannel}
-				>
-					{ this.getNoficationCount(channel) && (
-						<Label color="red">{this.getNoficationCount(channel)}</Label>
-					)}
-					{(channel.is_private) ? <Icon name="lock" title="Private channel"/> : '#'} { channel.name }
-				</Menu.Item>
-			: <Menu.Item
-					key={channel.id}
-					onClick={() => this.changeChannel(channel)}
-					name={channel.name}
-					active={channel.id === this.state.activeChannel}
-				>
-					{ this.getNoficationCount(channel) && (
-						<Label color="red">{this.getNoficationCount(channel)}</Label>)
-					}
-					{(channel.is_private) ? <Icon name="lock" title="Private channel"/> : '#'} { channel.name }
-				</Menu.Item>
+			(channel.createdBy.name === user.displayName && channel.is_private) ? <Menu.Item
+				key={channel.id}
+				onClick={() => this.changeChannel(channel)}
+				name={channel.name}
+				active={channel.id === this.state.activeChannel}
+			>
+				{this.getNoficationCount(channel) && (
+					<Label color="red">{this.getNoficationCount(channel)}</Label>
+				)}
+				<Icon name="lock" title="Private channel"/> {channel.name}
+			</Menu.Item>
+			: ""
+		))
+	)
+
+	displayPublicChannels = (channels, user) => (
+		channels.length > 0 && channels.map(channel => (
+			(!channel.is_private) ? <Menu.Item
+				key={channel.id}
+				onClick={() => this.changeChannel(channel)}
+				name={channel.name}
+				active={channel.id === this.state.activeChannel}
+			>
+				{this.getNoficationCount(channel) && (
+					<Label color="red">{this.getNoficationCount(channel)}</Label>
+				)}
+				# {channel.name}
+			</Menu.Item>
+			: ""
 		))
 	)
 
 	channelsCount = (channels, user) => {
-		let count = 0;
-		channels.length > 0 && channels.map(channel => (
-			(channel.createdBy.name === user.displayName) ? count++ : ''
-		))
-		return count;
+		let Count = 0;
+		/*(channel.createdBy.name === user.displayName) ? count++ : ''*/
+		if (channels.length > 0) {
+			channels.forEach(channel => {
+				if (channel.createdBy.name === user.displayName)
+					Count++;
+				if (channel.createdBy.name !== user.displayName && !channel.is_private)
+					Count++;
+			})
+			return Count;
+		}
 	}
 
 	componentDidMount () {
@@ -254,12 +265,13 @@ class Channels extends React.Component {
 				<Menu.Menu className="menu">
 					<Menu.Item>
 						<span> Channels </span>{" "}
-						({ this.channelsCount(channels, user)})
+						({ this.channelsCount(channels, user) })
 						<Icon name="users" onClick={this.openModal} title="add channel"/>
 					</Menu.Item>
 					{/* Channels */}
 					<div className="channels-list scrollBar-container">
-						{this.displayChannels(channels, user)}
+						{this.displayPrivateChannels(channels, user)}
+						{this.displayPublicChannels(channels, user)}
 					</div>
 				</Menu.Menu>
 				{/* Modal popup */}

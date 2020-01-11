@@ -56,7 +56,7 @@ class Starred extends React.Component {
 				name={channel.name}
 				active={channel.id === this.state.activeChannel}
 			>
-				<Icon name="pin" title="channel is pinned!"/> { channel.name }
+				<Icon name="pin" title="channel is pinned!"/> <span>{ channel.name }</span>
 			</Menu.Item>
 		))
 	)
