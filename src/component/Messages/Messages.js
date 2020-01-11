@@ -1,5 +1,5 @@
 import React from 'react';
-import { Segment, Comment, Icon } from 'semantic-ui-react';
+import { Segment, Comment, Icon, Divider } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { setUserPosts } from './../../actions';
 import firebase from './../../firebase';
@@ -258,7 +258,7 @@ class Messages extends React.Component {
 		if (channel != null && user.displayName === channel.name) {
 			return (<div>
 				<p> <strong>This is your space</strong>. Draft messages, make to-do lists or keep links and files to hand. You can also talk to yourself here, but please bear in mind you’ll have to provide both sides of the conversation.</p>
-			</div>);
+			<Divider/></div>);
 		}
 	}
 

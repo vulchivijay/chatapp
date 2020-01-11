@@ -24,7 +24,12 @@ class Channels extends React.Component {
 	}
 
 	handleChange = event => {
-		this.setState({[event.target.name]: event.target.value });
+		if (event.target.name === "channelName") {
+			console.log("----");
+			this.setState({ [event.target.name]: event.target.value.replace(/\s/g, '').toLowerCase() });
+		} else {
+			this.setState({ [event.target.name]: event.target.value });
+		}
 	}
 
 	isPrivate = (event, data) => {
@@ -36,6 +41,7 @@ class Channels extends React.Component {
 		if (this.isFormvalid(this.state)) {
 			this.addChannel();
 		}
+		this.setState({ isPrivate: false });
 	}
 
 	changeChannel = channel => {
@@ -97,8 +103,8 @@ class Channels extends React.Component {
 					active={channel.id === this.state.activeChannel}
 				>
 					{ this.getNoficationCount(channel) && (
-						<Label color="red">{this.getNoficationCount(channel)}</Label>
-					)}
+						<Label color="red">{this.getNoficationCount(channel)}</Label>)
+					}
 					{(channel.is_private) ? <Icon name="lock" title="Private channel"/> : '#'} { channel.name }
 				</Menu.Item>
 		))
@@ -127,7 +133,7 @@ class Channels extends React.Component {
 			loadedchannels.push(snap.val());
 			this.setState({channels: loadedchannels}, () => this.setFirstChannel());
 			this.addNotificationListener(snap.key);
-		})
+		});
 	}
 
 	userWorkplaceListeners = () => {
@@ -165,7 +171,6 @@ class Channels extends React.Component {
 				count: 0
 			});
 		}
-
 		this.setState({ notifications });
 	}
 
@@ -221,14 +226,28 @@ class Channels extends React.Component {
 			});
 	}
 
-	isFormvalid = ({ channelName, channelDetails, isPrivate }) => channelName && channelDetails
+	isFormvalid = ({ channelName, channelDetails, channels }) => {
+		let returnFlag = false;
+		if (channelName.length > 0 && channelDetails.length> 0) {
+			channels.forEach( channel => {
+				if (channel.name === channelName) {
+					returnFlag = true;
+				}
+			});
+		}
+		if (returnFlag) {
+			return false;
+		} else {
+			return true;
+		}
+	}
 
 	openModal = () => this.setState({ modal: true });
 
 	closeModal = () => this.setState({ modal: false });
 
 	render () {
-		const { channels, modal, user } = this.state;
+		const { channels, modal, user, channelName, channelDetails } = this.state;
 
 		return (
 			<React.Fragment>
@@ -253,6 +272,7 @@ class Channels extends React.Component {
 									fluid
 									label="Channel name"
 									name="channelName"
+									value={channelName}
 									onChange={this.handleChange}
 								/>
 							</Form.Field>
@@ -261,6 +281,7 @@ class Channels extends React.Component {
 									fluid
 									label="About channel"
 									name="channelDetails"
+									value={channelDetails}
 									onChange={this.handleChange}
 								/>
 							</Form.Field>
