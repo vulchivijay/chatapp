@@ -1,5 +1,5 @@
 import React from 'react';
-import { Segment, Comment } from 'semantic-ui-react';
+import { Segment, Comment, Icon } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { setUserPosts } from './../../actions';
 import firebase from './../../firebase';
@@ -30,7 +30,8 @@ class Messages extends React.Component {
 		connectedRef: firebase.database().ref('.info/connected'),
 		userPosts: this.props.userPosts,
 		openChannelInfo: false,
-		listeners: []
+		listeners: [],
+		arrowDown: false
 	}
 
 	componentDidMount() {
@@ -49,12 +50,14 @@ class Messages extends React.Component {
 
 	componentDidUpdate(prevProps, prevState) {
 		if (this.messagesEnd) {
+			this.state.arrowDown = true;
 			this.scrollToBottom();
 		}
 	}
 
 	scrollToBottom = () => {
-		this.messagesEnd.scrollIntoView({ behavior: 'smooth'});
+		//this.messagesEnd.scrollIntoView({ behavior: 'smooth'});
+		this.state.arrowDown = false;
 	}
 
 	removeListeners = listeners => {
@@ -273,7 +276,8 @@ class Messages extends React.Component {
 			isChannelStarred,
 			typingUsers,
 			userPosts,
-			openChannelInfo
+			openChannelInfo,
+			arrowDown
 		} = this.state;
 		return (
 			<React.Fragment>
@@ -304,6 +308,9 @@ class Messages extends React.Component {
 							isPrivateChannel={privateChannel}
 							getMessagesRef={this.getMessagesRef}
 						/>
+						<div className={arrowDown ? 'arrowDown show' : 'arrowDown hide'}>
+							<Icon name="arrow alternate circle down outline" title="move to bottom"></Icon>
+						</div>
 					</div>
 					<div>
 						<MetaPanel
