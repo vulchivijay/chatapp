@@ -12,11 +12,14 @@ class Login extends React.Component {
     loading: false,
     workplacename: "",
     workplaces: [],
-    workplaceRef: firebase.database().ref('workplaces')
+    workplaceRef: firebase.database().ref('workplaces'),
+    usersRef: firebase.database().ref('users'),
+    users: []
   }
 
   componentDidMount () {
     this.workplaceListeners();
+    this.usersListeners();
   }
 
   workplaceListeners = () => {
@@ -26,6 +29,17 @@ class Login extends React.Component {
         let workplaces = snap.val();
         loadedWorkplaces.push(workplaces);
         this.setState({ workplaces: loadedWorkplaces})
+      }
+    });
+  }
+
+  usersListeners = () => {
+    let loadedUsers = [];
+    this.state.usersRef.on('child_added', snap => {
+      if (snap.key !== "") {
+        let users = snap.val();
+        loadedUsers.push(users);
+        this.setState({ users: loadedUsers})
       }
     });
   }
@@ -66,29 +80,29 @@ class Login extends React.Component {
     }
   }
 
-  isFormValid = ({workplacename, email, password}) => {
+  isFormValid = ({workplacename, email, password, users}) => {
     let errors = [];
     let error;
-    let returnFlag = false;
+    let returnUserFlag = false;
 
     if (this.isFormEmpty(this.state)) {
       error = { message: "Fill all the fields!" };
       this.setState({ errors: errors.concat(error) });
-      returnFlag = false;
+      returnUserFlag = false;
     } else {
       if (workplacename.length > 0) {
-        this.state.workplaces.forEach((workplace)=> {
-          if (workplace.name === workplacename) {
-            returnFlag = true;
+        users.forEach( (user) => {
+          if (user.email === this.state.email && user.workplace.name === this.state.workplacename) {
+            returnUserFlag = true;
           }
         });
-        if (!returnFlag) {
-          error = { message: "Workplace does not exit!" };
+        if (!returnUserFlag) {
+          error = { message: "Workplace does not exit or User does not exit in this channel!" };
           this.setState({ errors: errors.concat(error) });
         }
       }
     }
-    return returnFlag;
+    return returnUserFlag;
   }
 
   isFormEmpty = ({ workplacename, email, password }) => {
