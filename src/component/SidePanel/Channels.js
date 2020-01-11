@@ -117,7 +117,6 @@ class Channels extends React.Component {
 
 	channelsCount = (channels, user) => {
 		let Count = 0;
-		/*(channel.createdBy.name === user.displayName) ? count++ : ''*/
 		if (channels.length > 0) {
 			channels.forEach(channel => {
 				if (channel.createdBy.name === user.displayName)
@@ -196,7 +195,7 @@ class Channels extends React.Component {
 		let firstChannel;
 		let channelsNotEmpty = this.state.firstLoad && this.state.channels.length > 0 ? true : false
 		this.state.channels.forEach( (channel, index) => {
-			if (channelsNotEmpty && this.state.userWorkplaceName === channel.workplaceName) {
+			if (channelsNotEmpty && channel.createdBy.name === this.state.user.displayName) {
 				firstChannel = this.state.channels[index];
 				this.props.setCurrentChannel(firstChannel);
 				this.setActiveChannel(firstChannel);
