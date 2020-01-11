@@ -10,6 +10,41 @@ body,
   height: 100%;
   background-color: #fff;
 }
+/* default scrolbar */
+body ::-webkit-scrollbar-track {
+	background: #f9f9f9 !important;
+}
+.scrollBar-container {
+	max-height: 150px;
+	overflow: hidden;
+	overflow-y: auto;
+}
+.scrollBar-container::-webkit-scrollbar,
+.ui.segment.messages::-webkit-scrollbar {
+  width: 6px !important;
+}
+.scrollBar-container::-webkit-scrollbar-track,
+.ui.segment.messages::-webkit-scrollbar-track {
+  box-shadow: 0 0 4px rgba(255, 255, 255, 0.3) !important;
+}
+.scrollBar-container::-webkit-scrollbar-thumb,
+.ui.segment.messages::-webkit-scrollbar-thumb {
+  border-radius: 0 !important;
+}
+.scrollBar-container::-webkit-scrollbar-thumb {
+	background-color: #ffffff !important;
+}
+.ui.segment.messages::-webkit-scrollbar-thumb {
+  background-color: #130f40 !important;
+}
+/**/
+.show {
+	display: block !important;
+}
+.hide {
+	display: none !important;
+}
+/**/
 .ui.grid.app {
 	margin: 0;
 	overflow: hidden !important;
@@ -52,21 +87,26 @@ body,
 }
 .chatPannel .ui.segment.messagesHeader {
 	height: 66px;
+	padding: 12px 15px;
 	border-radius: 0;
 	border-bottom: 1px solid #ddd;
+	overflow: hidden;
 }
 .messagesHeader .ui.header .sub.header {
 	margin-top: 5px;
 	font-size: 14px;
 }
+.ui.segment.messagesHeader .right.header,
+.ui.segment.messagesHeader .right.header .icon:only-child {
+	margin-right: 0;
+}
 /* Messages js */
 .chatPannel .messagesContainer {
-	height: calc(100% - 150px);
+	height: calc(100% - 66px);
 }
 .messagesContainer > div {
+	position: relative;
 	height: 100%;
-	overflow: hidden;
-	overflow-y: auto;
 }
 .messagesContainer > div {
 	float: left;
@@ -77,6 +117,13 @@ body,
 .messagesContainer > div:last-child {
 	width: 0;
 }
+.messagesContainer > div > .arrowDown {
+	position: absolute;
+  z-index: 9;
+  right: 12px;
+  bottom: 90px;
+  font-size: 18px;
+}
 .messagesContainer.showChannelInfo > div:first-child {
 	width: 75%;
 	border-right: 1px solid #ddd;
@@ -84,9 +131,18 @@ body,
 .messagesContainer.showChannelInfo > div:last-child {
 	width: 25%;
 }
-
 .ui.segment.messages .ui.comments {
 	max-width: 100%;
+}
+.messagesContainer .ui.segment.messages {
+	height: calc(100% - 84px);
+	overflow: hidden;
+	overflow-y: auto;
+}
+.channelInfo.ui.segment:first-child {
+	height: 100%;
+	overflow: hidden;
+	overflow-y: auto;
 }
 
 /* message form js*/
@@ -118,7 +174,6 @@ body,
 	border-left: 2px solid blue;
 	padding-left: 8px;
 }
-
 .message__image {
 	padding: 1em;
 }
@@ -128,11 +183,16 @@ body,
 .message-users-list i.icon {
 	line-height: 1.1;
 }
+.ui.vertical.menu .starred-list .item > i.icon,
+.ui.vertical.menu .channels-list .item > i.icon,
+.ui.vertical.menu .message-users-list .item > i.icon {
+	float: left;
+	margin: 0 .5rem 0 0;
+}
 /* progress bar */
 .progress__bar {
 	margin: .3em 0 0 0 !important;
 }
-
 /* metapanel styles */
 .chatPannel .ui.segment.channelInfo {
 	padding: 0;
@@ -146,14 +206,26 @@ body,
 .ui.vertical.menu .channels-list .item > i.icon {
 	margin-top: 1px;
 }
-
+/* modal */
+.dimmer.active .ui.basic.modal {
+	max-width: 600px;
+	border-radius: 10px;
+	background-color: #ffffff;
+	color: #000000;
+}
+.dimmer.active .ui.basic.modal >.header {
+	color: #000000;
+}
+.dimmer .ui.toggle.checkbox label::before,
+.dimmer .ui.toggle.checkbox label:hover::before {
+	background-color: rgba(0,0,0,0.1);
+}
 /* typing js */
 .user__typing {
 	font-style: italic;
 	font-weight: bold;
 	margin-right: 3px;
 }
-
 .typing {
 	width: 5em;
 	height: 2em;
@@ -163,7 +235,6 @@ body,
 	background: #e6e6e6;
 	border-radius: 20px;
 }
-
 .typing__dot {
 	float: left;
 	width: 8px;
@@ -174,46 +245,17 @@ body,
 	opacity: 0;
 	animation: loadingFade 1s infinite;
 }
-
 .typing__dot:nth-child(1) {
 	animation-delay: 0s;
 }
-
 .typing__dot:nth-child(2) {
 	animation-delay: 0.2s;
 }
-
 .typing__dot:nth-child(3) {
 	animation-delay: 0.4s;
 }
-
 @keyframes loadingFade {
 	0% { opacity: 0; }
 	50% { opacity: 0.8; }
 	100% { opacity: 0; }
-}
-
-/* default scrolbar */
-.scrollBar-container {
-	max-height: 150px;
-	overflow: hidden;
-	overflow-y: auto;
-}
-.scrollBar-container::-webkit-scrollbar,
-.messagesContainer > div::-webkit-scrollbar {
-  width: 6px !important;
-}
-.scrollBar-container::-webkit-scrollbar-track,
-.messagesContainer > div::-webkit-scrollbar-track {
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.3) !important;
-}
-.scrollBar-container::-webkit-scrollbar-thumb,
-.messagesContainer > div::-webkit-scrollbar-thumb {
-  border-radius: 0 !important;
-}
-.scrollBar-container::-webkit-scrollbar-thumb {
-	background-color: #ffffff !important;
-}
-.messagesContainer > div::-webkit-scrollbar-thumb {
-  background-color: #130f40 !important;
 }

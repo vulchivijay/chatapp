@@ -12,11 +12,14 @@ class Login extends React.Component {
     loading: false,
     workplacename: "",
     workplaces: [],
-    workplaceRef: firebase.database().ref('workplaces')
+    workplaceRef: firebase.database().ref('workplaces'),
+    usersRef: firebase.database().ref('users'),
+    users: []
   }
 
   componentDidMount () {
     this.workplaceListeners();
+    this.usersListeners();
   }
 
   workplaceListeners = () => {
@@ -30,10 +33,25 @@ class Login extends React.Component {
     });
   }
 
+  usersListeners = () => {
+    let loadedUsers = [];
+    this.state.usersRef.on('child_added', snap => {
+      if (snap.key !== "") {
+        let users = snap.val();
+        loadedUsers.push(users);
+        this.setState({ users: loadedUsers})
+      }
+    });
+  }
+
   displayErrors = errors => errors.map((error, i) => <span key={i}>{error.message}</span>)
 
   handleChange = event => {
-    this.setState({ [event.target.name]: event.target.value });
+    if (event.target.name === "workplacename") {
+      this.setState({ [event.target.name]: event.target.value.replace(/\s/g, '').toLowerCase() });
+    } else {
+      this.setState({ [event.target.name]: event.target.value });
+    }
   }
 
   handleInputError = (errors, inputName) => {
@@ -62,29 +80,29 @@ class Login extends React.Component {
     }
   }
 
-  isFormValid = ({workplacename, email, password}) => {
+  isFormValid = ({workplacename, email, password, users}) => {
     let errors = [];
     let error;
-    let returnFlag = false;
+    let returnUserFlag = false;
 
     if (this.isFormEmpty(this.state)) {
       error = { message: "Fill all the fields!" };
       this.setState({ errors: errors.concat(error) });
-      returnFlag = false;
+      returnUserFlag = false;
     } else {
       if (workplacename.length > 0) {
-        this.state.workplaces.forEach((workplace)=> {
-          if (workplace.name === workplacename) {
-            returnFlag = true;
+        users.forEach( (user) => {
+          if (user.email === this.state.email && user.workplace.name === this.state.workplacename) {
+            returnUserFlag = true;
           }
         });
-        if (!returnFlag) {
-          error = { message: "Workplace does not exit!" };
+        if (!returnUserFlag) {
+          error = { message: "Workplace does not exit or User does not exit in this channel!" };
           this.setState({ errors: errors.concat(error) });
         }
       }
     }
-    return returnFlag;
+    return returnUserFlag;
   }
 
   isFormEmpty = ({ workplacename, email, password }) => {
@@ -109,8 +127,8 @@ class Login extends React.Component {
             </Segment>
           </Form>
           {errors.length > 0 && (<Message error><b>Error: </b>{this.displayErrors(errors)} </Message>)}
-          <Message>Don't have a workplace user? <Link to="/register">Create workplace user</Link></Message>
-          <Message>Don't have a workplace? <Link to="/new">Create workplace</Link></Message>
+          <Message>My team is on workplace! <Link to="/register">Signup in to your team workplace</Link></Message>
+          <Message>My team is not using workplace yet! <Link to="/new">Create workplace to your team</Link></Message>
         </Grid.Column>
       </Grid>
     );

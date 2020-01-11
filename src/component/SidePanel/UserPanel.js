@@ -38,8 +38,8 @@ class UserPanel extends React.Component {
 
   dropdownOptions = () => [
     {
-      key: 'user',
-      text: <span>Signed in as <strong>{this.state.user.displayName}</strong></span>,
+      key: 'userWorkplaceName',
+      text: <span><Icon name="industry"/> <strong>{this.state.userWorkplaceName}</strong></span>,
       disabled: true
     },
     {
@@ -120,7 +120,7 @@ class UserPanel extends React.Component {
   }
 
   render () {
-    const {user, modal, previewImage, croppedImage, userWorkplaceName} = this.state;
+    const {user, modal, previewImage, croppedImage} = this.state;
     return (
       <Grid style={{margin: 0}}>
         <Grid.Column>
@@ -134,8 +134,6 @@ class UserPanel extends React.Component {
                 </span>
               } options={ this.dropdownOptions() } />
             </Header>
-            <Divider style={{ marginTop: 0}}/>
-            <p style={{color: "white", fontSize: "12px"}}><Icon name="industry"/> {userWorkplaceName} </p>
             <Divider style={{ margin: 0}}/>
           </Grid.Row>
           {/* user avatar change */}

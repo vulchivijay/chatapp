@@ -2,26 +2,37 @@ import React from 'react';
 import firebase from './../../firebase';
 import { connect } from 'react-redux';
 import { setCurrentChannel, setPrivateChannel } from './../../actions';
-import { Menu, Icon, Modal, Form, Input, Button, Label } from 'semantic-ui-react';
+import { Menu, Icon, Modal, Form, Input, Button, Label, Checkbox } from 'semantic-ui-react';
 
 class Channels extends React.Component {
 	state = {
-		activeChannel: '',
 		user: this.props.currentUser,
-		channels: [],
-		channelName: '',
-		channelDetails: '',
-		channelsRef: firebase.database().ref('channels'),
 		modal: false,
 		firstLoad: true,
 		channel: null,
-		messagesRef: firebase.database().ref('messages'),
+		isPrivate: false,
 		notifications: [],
-		typingRef: firebase.database().ref('typing')
+		channels: [],
+		userWorkplaceName: "",
+		channelName: "",
+		channelDetails: "",
+		activeChannel: "",
+		channelsRef: firebase.database().ref('channels'),
+		messagesRef: firebase.database().ref('messages'),
+		typingRef: firebase.database().ref('typing'),
+		usersRef: firebase.database().ref('users')
 	}
 
 	handleChange = event => {
-		this.setState({[event.target.name]: event.target.value })
+		if (event.target.name === "channelName") {
+			this.setState({ [event.target.name]: event.target.value.replace(/\s/g, '').toLowerCase() });
+		} else {
+			this.setState({ [event.target.name]: event.target.value });
+		}
+	}
+
+	isPrivate = (event, data) => {
+		this.setState({ isPrivate: data.checked });
 	}
 
 	handleSubmit = event => {
@@ -29,6 +40,7 @@ class Channels extends React.Component {
 		if (this.isFormvalid(this.state)) {
 			this.addChannel();
 		}
+		this.setState({ isPrivate: false });
 	}
 
 	changeChannel = channel => {
@@ -69,35 +81,57 @@ class Channels extends React.Component {
 		this.setState({ activeChannel: channel.id })
 	}
 
-	displayChannels = (channels, user) => (
+	displayPrivateChannels = (channels, user) => (
 		channels.length > 0 && channels.map(channel => (
-			(user.uid === channel.createdBy.id) ?
-				<Menu.Item
-					key={channel.id}
-					onClick={() => this.changeChannel(channel)}
-					name={channel.name}
-					active={channel.id === this.state.activeChannel}
-				>
-					{ this.getNoficationCount(channel) && (
-						<Label color="red">{this.getNoficationCount(channel)}</Label>
-					)}
-					# { channel.name }
-					<Icon name="user outline" title="add user"/>
-				</Menu.Item>
-			: ''
+			(channel.createdBy.name === user.displayName && channel.is_private) ? <Menu.Item
+				key={channel.id}
+				onClick={() => this.changeChannel(channel)}
+				name={channel.name}
+				active={channel.id === this.state.activeChannel}
+			>
+				{this.getNoficationCount(channel) && (
+					<Label color="red">{this.getNoficationCount(channel)}</Label>
+				)}
+				<Icon name="lock" title="Private channel"/> {channel.name}
+			</Menu.Item>
+			: ""
+		))
+	)
+
+	displayPublicChannels = (channels, user) => (
+		channels.length > 0 && channels.map(channel => (
+			(!channel.is_private) ? <Menu.Item
+				key={channel.id}
+				onClick={() => this.changeChannel(channel)}
+				name={channel.name}
+				active={channel.id === this.state.activeChannel}
+			>
+				{this.getNoficationCount(channel) && (
+					<Label color="red">{this.getNoficationCount(channel)}</Label>
+				)}
+				# {channel.name}
+			</Menu.Item>
+			: ""
 		))
 	)
 
 	channelsCount = (channels, user) => {
-		let count = 0;
-		channels.length > 0 && channels.map(channel => (
-			(channel.createdBy.name === user.displayName) ? count++ : ''
-		))
-		return count;
+		let Count = 0;
+		/*(channel.createdBy.name === user.displayName) ? count++ : ''*/
+		if (channels.length > 0) {
+			channels.forEach(channel => {
+				if (channel.createdBy.name === user.displayName)
+					Count++;
+				if (channel.createdBy.name !== user.displayName && !channel.is_private)
+					Count++;
+			})
+			return Count;
+		}
 	}
 
 	componentDidMount () {
 		this.addListeners();
+		this.userWorkplaceListeners();
 	}
 
 	componentWillUnmount () {
@@ -110,8 +144,16 @@ class Channels extends React.Component {
 			loadedchannels.push(snap.val());
 			this.setState({channels: loadedchannels}, () => this.setFirstChannel());
 			this.addNotificationListener(snap.key);
-		})
+		});
 	}
+
+	userWorkplaceListeners = () => {
+    this.state.usersRef.on('child_added', snap => {
+      if (snap.key === this.state.user.uid) {
+        this.setState({ userWorkplaceName: snap.val().workplace.name})
+      }
+    });
+  }
 
 	addNotificationListener = channelId => {
 		this.state.messagesRef.child(channelId).on('value', snap => {
@@ -140,7 +182,6 @@ class Channels extends React.Component {
 				count: 0
 			});
 		}
-
 		this.setState({ notifications });
 	}
 
@@ -155,7 +196,7 @@ class Channels extends React.Component {
 		let firstChannel;
 		let channelsNotEmpty = this.state.firstLoad && this.state.channels.length > 0 ? true : false
 		this.state.channels.forEach( (channel, index) => {
-			if ( channelsNotEmpty && this.state.user.uid === channel.createdBy.id ) {
+			if (channelsNotEmpty && this.state.userWorkplaceName === channel.workplaceName) {
 				firstChannel = this.state.channels[index];
 				this.props.setCurrentChannel(firstChannel);
 				this.setActiveChannel(firstChannel);
@@ -167,7 +208,7 @@ class Channels extends React.Component {
 	}
 
 	addChannel = () => {
-		const { channelsRef, channelName, channelDetails, user } = this.state;
+		const { channelsRef, channelName, channelDetails, user, userWorkplaceName, isPrivate } = this.state;
 
 		const key = channelsRef.push().key;
 
@@ -175,6 +216,8 @@ class Channels extends React.Component {
 			id: key,
 			name: channelName,
 			details: channelDetails,
+			workplaceName: userWorkplaceName,
+			is_private: isPrivate,
 			createdBy: {
 				id: user.uid,
 				name: user.displayName,
@@ -194,26 +237,41 @@ class Channels extends React.Component {
 			});
 	}
 
-	isFormvalid = ({ channelName, channelDetails }) => channelName && channelDetails;
+	isFormvalid = ({ channelName, channelDetails, channels }) => {
+		let returnFlag = false;
+		if (channelName.length > 0 && channelDetails.length> 0) {
+			channels.forEach( channel => {
+				if (channel.name === channelName) {
+					returnFlag = true;
+				}
+			});
+		}
+		if (returnFlag) {
+			return false;
+		} else {
+			return true;
+		}
+	}
 
 	openModal = () => this.setState({ modal: true });
 
 	closeModal = () => this.setState({ modal: false });
 
 	render () {
-		const { channels, modal, user } = this.state;
+		const { channels, modal, user, channelName, channelDetails } = this.state;
 
 		return (
 			<React.Fragment>
 				<Menu.Menu className="menu">
 					<Menu.Item>
 						<span> Channels </span>{" "}
-						({ this.channelsCount(channels, user)})
-						{/*<Icon name="users" onClick={this.openModal} title="add channel"/>*/}
+						({ this.channelsCount(channels, user) })
+						<Icon name="users" onClick={this.openModal} title="add channel"/>
 					</Menu.Item>
 					{/* Channels */}
 					<div className="channels-list scrollBar-container">
-						{this.displayChannels(channels, user)}
+						{this.displayPrivateChannels(channels, user)}
+						{this.displayPublicChannels(channels, user)}
 					</div>
 				</Menu.Menu>
 				{/* Modal popup */}
@@ -226,6 +284,7 @@ class Channels extends React.Component {
 									fluid
 									label="Channel name"
 									name="channelName"
+									value={channelName}
 									onChange={this.handleChange}
 								/>
 							</Form.Field>
@@ -234,7 +293,16 @@ class Channels extends React.Component {
 									fluid
 									label="About channel"
 									name="channelDetails"
+									value={channelDetails}
 									onChange={this.handleChange}
+								/>
+							</Form.Field>
+							<Form.Field>
+						    <Checkbox
+						    	toggle
+						    	label="Is private?"
+						    	name="isPrivate"
+									onChange={this.isPrivate}
 								/>
 							</Form.Field>
 						</Form>

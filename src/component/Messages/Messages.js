@@ -1,5 +1,5 @@
 import React from 'react';
-import { Segment, Comment } from 'semantic-ui-react';
+import { Segment, Comment, Icon, Divider } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { setUserPosts } from './../../actions';
 import firebase from './../../firebase';
@@ -30,7 +30,8 @@ class Messages extends React.Component {
 		connectedRef: firebase.database().ref('.info/connected'),
 		userPosts: this.props.userPosts,
 		openChannelInfo: false,
-		listeners: []
+		listeners: [],
+		arrowDown: false
 	}
 
 	componentDidMount() {
@@ -49,12 +50,14 @@ class Messages extends React.Component {
 
 	componentDidUpdate(prevProps, prevState) {
 		if (this.messagesEnd) {
+			//this.state.arrowDown = true;
 			this.scrollToBottom();
 		}
 	}
 
 	scrollToBottom = () => {
 		this.messagesEnd.scrollIntoView({ behavior: 'smooth'});
+		// this.state.arrowDown = false;
 	}
 
 	removeListeners = listeners => {
@@ -251,6 +254,14 @@ class Messages extends React.Component {
 		return channel ? `${this.state.privateChannel ? '@' : '#'}${channel.name}` : '';
 	}
 
+	displayDraftUserMesssage = (user, channel) => {
+		if (channel != null && user.displayName === channel.name) {
+			return (<div>
+				<p> <strong>This is your space</strong>. Draft messages, make to-do lists or keep links and files to hand. You can also talk to yourself here, but please bear in mind you’ll have to provide both sides of the conversation.</p>
+			<Divider/></div>);
+		}
+	}
+
 	displayTypingUsers = users => (
 		users.length > 0 && users.map(user => (
 			<div style={{ display: "flex", alignItems: "center", marginBottom: '0.2em' }} key={user.id}>
@@ -273,7 +284,8 @@ class Messages extends React.Component {
 			isChannelStarred,
 			typingUsers,
 			userPosts,
-			openChannelInfo
+			openChannelInfo,
+			arrowDown
 		} = this.state;
 		return (
 			<React.Fragment>
@@ -290,6 +302,7 @@ class Messages extends React.Component {
 				<div className={openChannelInfo ? 'messagesContainer showChannelInfo' : 'messagesContainer'}>
 					<div>
 						<Segment className="messages">
+							{this.displayDraftUserMesssage(user, channel)}
 							<Comment.Group>
 								{ searchTerm ? this.displayMessages(searchResults) :
 									this.displayMessages(messages) }
@@ -297,23 +310,26 @@ class Messages extends React.Component {
 								<div ref={node => (this.messagesEnd = node)}></div>
 							</Comment.Group>
 						</Segment>
+						<MessageForm
+							messagesRef={messagesRef}
+							currentChannel={channel}
+							currentUser={user}
+							isPrivateChannel={privateChannel}
+							getMessagesRef={this.getMessagesRef}
+						/>
+						<div className={arrowDown ? 'arrowDown show' : 'arrowDown hide'}>
+							<Icon name="arrow alternate circle down outline" title="move to bottom"></Icon>
+						</div>
 					</div>
 					<div>
 						<MetaPanel
-				          key={channel && channel.id}
-				          userPosts={userPosts}
-				          currentChannel={channel}
-				          isPrivateChannel={privateChannel}
-				        />
-			        </div>
+		          key={channel && channel.id}
+		          userPosts={userPosts}
+		          currentChannel={channel}
+		          isPrivateChannel={privateChannel}
+				    />
+			    </div>
 				</div>
-				<MessageForm
-					messagesRef={messagesRef}
-					currentChannel={channel}
-					currentUser={user}
-					isPrivateChannel={privateChannel}
-					getMessagesRef={this.getMessagesRef}
-				/>
 			</React.Fragment>
 		)
 	}

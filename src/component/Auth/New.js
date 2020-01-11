@@ -93,7 +93,11 @@ class Register extends React.Component {
   displayErrors = errors => errors.map((error, i) => <span key={i}>{error.message}</span>)
 
   handleChange = event => {
-    this.setState({ [event.target.name]: event.target.value });
+    if (event.target.name === "workplacename") {
+      this.setState({ [event.target.name]: event.target.value.replace(/\s/g, '').toLowerCase() });
+    } else {
+      this.setState({ [event.target.name]: event.target.value });
+    }
   }
 
   handleInputError = (errors, inputName) => {
