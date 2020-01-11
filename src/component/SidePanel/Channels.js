@@ -39,8 +39,6 @@ class Channels extends React.Component {
 	}
 
 	changeChannel = channel => {
-		console.log(this.state.channel.id);
-		console.log(this.state.user.uid);
 		this.setActiveChannel(channel);
 		this.state.typingRef
 			.child(this.state.channel.id)

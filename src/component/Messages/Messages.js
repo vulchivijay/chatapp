@@ -50,14 +50,14 @@ class Messages extends React.Component {
 
 	componentDidUpdate(prevProps, prevState) {
 		if (this.messagesEnd) {
-			this.state.arrowDown = true;
+			//this.state.arrowDown = true;
 			this.scrollToBottom();
 		}
 	}
 
 	scrollToBottom = () => {
-		//this.messagesEnd.scrollIntoView({ behavior: 'smooth'});
-		this.state.arrowDown = false;
+		this.messagesEnd.scrollIntoView({ behavior: 'smooth'});
+		// this.state.arrowDown = false;
 	}
 
 	removeListeners = listeners => {
@@ -254,6 +254,14 @@ class Messages extends React.Component {
 		return channel ? `${this.state.privateChannel ? '@' : '#'}${channel.name}` : '';
 	}
 
+	displayDraftUserMesssage = (user, channel) => {
+		if (channel != null && user.displayName === channel.name) {
+			return (<div>
+				<p> <strong>This is your space</strong>. Draft messages, make to-do lists or keep links and files to hand. You can also talk to yourself here, but please bear in mind you’ll have to provide both sides of the conversation.</p>
+			</div>);
+		}
+	}
+
 	displayTypingUsers = users => (
 		users.length > 0 && users.map(user => (
 			<div style={{ display: "flex", alignItems: "center", marginBottom: '0.2em' }} key={user.id}>
@@ -294,6 +302,7 @@ class Messages extends React.Component {
 				<div className={openChannelInfo ? 'messagesContainer showChannelInfo' : 'messagesContainer'}>
 					<div>
 						<Segment className="messages">
+							{this.displayDraftUserMesssage(user, channel)}
 							<Comment.Group>
 								{ searchTerm ? this.displayMessages(searchResults) :
 									this.displayMessages(messages) }
