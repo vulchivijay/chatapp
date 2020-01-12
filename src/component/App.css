@@ -69,14 +69,12 @@ body ::-webkit-scrollbar-track {
 .asidePannel > vertical.menu > .ui.divider {
 	margin: 5px 0;
 }
-.asidePannel > .ui.large.vertical.menu {
-	width: 100%;
+.ui.large.vertical.menu {
 	height: 100%;
 	overflow-y: auto;
 	font-size: 16px;
 	margin: 0;
 	border-radius: 0;
-	background-color: #8bc34a;
 }
 .asidePannel .ui.vertical.inverted.menu .menu .item {
 	text-transform: capitalize;
@@ -115,9 +113,6 @@ body ::-webkit-scrollbar-track {
 .ui.segment.messagesHeader .right.header,
 .ui.segment.messagesHeader .right.header .icon:only-child {
 	margin-right: 0;
-}
-.message-users-list i.icon.green {
-	color: #00711b!important;	
 }
 /* Messages js */
 .chatPannel .messagesContainer {
@@ -233,6 +228,20 @@ body ::-webkit-scrollbar-track {
 .dimmer.active .ui.basic.modal {
 	max-width: 600px;
 	border-radius: 10px;
+	background-color: #ffffff;
+	color: #000000;
+}
+.dimmer.active .ui.basic.modal.contactsModel {
+	max-width: 260px;
+	max-height: 400px;
+}
+.ui.basic.modal.contactsModel .content {
+	padding: 0;
+}
+.ui.basic.modal.contactsModel .vertical.menu {
+	width: 100%;
+}
+.ui.basic.modal.contactsModel .vertical.menu div.item {
 	background-color: #ffffff;
 	color: #000000;
 }

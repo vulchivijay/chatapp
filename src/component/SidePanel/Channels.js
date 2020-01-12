@@ -174,9 +174,10 @@ class Channels extends React.Component {
 					Count++;
 				if (channel.createdBy.name !== user.displayName && !channel.is_private)
 					Count++;
-			})
+			});
 			return Count;
 		}
+		return Count;
 	}
 
 	addNotificationListener = channelId => {
@@ -275,6 +276,10 @@ class Channels extends React.Component {
 		}
 	}
 
+	selectedUser = user => {
+		console.log(user);
+	}
+
 	openModal = () => this.setState({ modal: true });
 	closeModal = () => this.setState({ modal: false });
 
@@ -342,16 +347,30 @@ class Channels extends React.Component {
 					</Modal.Actions>
 				</Modal>
 				{/* Modal popup */}
-				<Modal basic open={usersmodal} onClose={this.closeUsersModal}>
+				<Modal basic open={usersmodal} onClose={this.closeUsersModal} className="contactsModel">
 					<Modal.Header>Add a Member </Modal.Header>
 					<Modal.Content>
-						{ users.map(user => (
+						<Menu
+			        size="large"
+			        inverted
+			        vertical
+			      >
+							<Menu.Menu className="menu">
 								<Menu.Item>
-									<Icon name="circle"/>
-									<span>{user.name}</span>
+									<span>Contacts</span>{" "} ({ users.length })
 								</Menu.Item>
-							))
-						}
+								{/* Users */}
+								{users.length > 0 && users.map(user => (
+									<Menu.Item
+										key={user.name}
+										onClick={() => this.selectedUser(user)}
+										name={user.name}
+									>
+										<Icon name="circle"/> <span>{ user.name }</span>
+									</Menu.Item>
+								))}
+							</Menu.Menu>
+						</Menu>
 					</Modal.Content>
 					<Modal.Actions>
 						<Button color="red" inverted onClick={this.closeUsersModal}>
