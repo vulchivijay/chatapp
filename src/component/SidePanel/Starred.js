@@ -2,7 +2,7 @@ import React from 'react';
 import firebase from './../../firebase';
 import { connect } from 'react-redux';
 import { setCurrentChannel, setPrivateChannel } from './../../actions';
-import { Menu, Icon } from 'semantic-ui-react';
+import { Menu, Icon, Divider } from 'semantic-ui-react';
 
 class Starred extends React.Component {
 	state = {
@@ -74,16 +74,19 @@ class Starred extends React.Component {
 	render () {
 		const { starredChannels } = this.state;
 		return (
-			<Menu.Menu className="menu">
-				<Menu.Item>
-					<span>Starred</span>{" "}
-					({ starredChannels.length })
-				</Menu.Item>
-				{/* Channels */}
-				<div className="starred-list scrollBar-container">
-					{this.displayChannels(starredChannels)}
-				</div>
-			</Menu.Menu>
+			<React.Fragment>
+				<Menu.Menu className="menu">
+					<Menu.Item>
+						<span>Starred</span>{" "}
+						({ starredChannels.length })
+					</Menu.Item>
+					{/* Channels */}
+					<div className="starred-list scrollBar-container">
+						{this.displayChannels(starredChannels)}
+					</div>
+				</Menu.Menu>
+				<Divider/>
+			</React.Fragment>
 		)
 	}
 }

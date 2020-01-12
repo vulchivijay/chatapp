@@ -55,10 +55,19 @@ body ::-webkit-scrollbar-track {
 	padding: 0;
 }
 .ui.grid.app > .row > .column:first-child {
-	width: 20%;
+	width: 250px;
 }
 .ui.grid.app > .row > .column:last-child {
-	width: 80%;
+	width: calc(100% - 250px);
+}
+.asidePannel > .vertical.menu > .ui.grid .column {
+	padding-bottom: 0;
+}
+.asidePannel > .vertical.menu > .menu.menu {
+	max-height: calc(100% - 75%);
+}
+.asidePannel > vertical.menu > .ui.divider {
+	margin: 5px 0;
 }
 .asidePannel > .ui.large.vertical.menu {
 	width: 100%;
@@ -67,9 +76,10 @@ body ::-webkit-scrollbar-track {
 	font-size: 16px;
 	margin: 0;
 	border-radius: 0;
-	background-color: #001796;
+	background-color: #8bc34a;
 }
 .asidePannel .ui.vertical.inverted.menu .menu .item {
+	text-transform: capitalize;
 	color: rgba(255, 255, 255, 0.8);
 }
 .asidePannel .ui.vertical.inverted.menu .menu > .item {
@@ -80,13 +90,19 @@ body ::-webkit-scrollbar-track {
 	font-size: 16px;
 	cursor: pointer;
 }
+.asidePannel .ui.vertical.menu .starred-list .item > i.icon {
+	margin-right: 3px;
+	vertical-align: middle;
+	float: none;
+	font-size: 12px;
+}
 .chatPannel .ui.segment {
 	margin: 0;
 	box-shadow: none;
 	border: none;
 }
 .chatPannel .ui.segment.messagesHeader {
-	height: 66px;
+	height: 65px;
 	padding: 12px 15px;
 	border-radius: 0;
 	border-bottom: 1px solid #ddd;
@@ -99,6 +115,9 @@ body ::-webkit-scrollbar-track {
 .ui.segment.messagesHeader .right.header,
 .ui.segment.messagesHeader .right.header .icon:only-child {
 	margin-right: 0;
+}
+.message-users-list i.icon.green {
+	color: #00711b!important;	
 }
 /* Messages js */
 .chatPannel .messagesContainer {
@@ -188,6 +207,10 @@ body ::-webkit-scrollbar-track {
 .ui.vertical.menu .message-users-list .item > i.icon {
 	float: left;
 	margin: 0 .5rem 0 0;
+}
+.ui.vertical.menu .channels-list .item > i.icon.add {
+	float: right;
+	margin-right: 0;
 }
 /* progress bar */
 .progress__bar {

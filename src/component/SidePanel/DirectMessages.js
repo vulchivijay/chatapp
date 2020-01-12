@@ -2,19 +2,21 @@ import React from 'react';
 import firebase from './../../firebase';
 import { connect } from 'react-redux';
 import { setCurrentChannel, setPrivateChannel } from './../../actions';
-import { Menu, Icon } from 'semantic-ui-react';
+import { Menu, Icon, Divider } from 'semantic-ui-react';
 
 class DirectMessages extends React.Component {
 	state = {
 		user: this.props.currentUser,
 		users: [],
+		notifications: [],
+		loggedInUser: [],
 		usersRef: firebase.database().ref('users'),
 		connectedRef: firebase.database().ref('.info/connected'),
 		presenceRef: firebase.database().ref('presence'),
-		activeChannel: '',
 		typingRef: firebase.database().ref('typing'),
-		userWorkplaceName: "",
-		loggedInUser: []
+		messagesRef: firebase.database().ref('messages'),
+		activeChannel: '',
+		userWorkplaceName: ""
 	}
 
 	componentDidMount() {
@@ -56,6 +58,7 @@ class DirectMessages extends React.Component {
 				} else {
 					loadedUsers.push(user);
 					this.setState({ users: loadedUsers });
+					this.addNotificationListener(snap.key);
 				}
 			}
 		});
@@ -113,9 +116,61 @@ class DirectMessages extends React.Component {
 			id: channelId,
 			name: user.name
 		};
+		this.clearNotifications();
 		this.props.setCurrentChannel(channelData);
 		this.props.setPrivateChannel(true);
 		this.setActiveChannel(user.uid);
+	}
+
+	clearNotifications = () => {
+		let index = this.state.notifications.findIndex(notification => notification.id === this.state.user.uid);
+		if (index !== -1) {
+			let updatedNotifications = [...this.state.notifications];
+			updatedNotifications[index].total = this.state.notifications[index].lastKnownTotal;
+			updatedNotifications[index].count = 0;
+			this.setState({ notifications: updatedNotifications });
+		}
+	}
+
+	getNoficationCount = user => {
+		let count = 0;
+		this.state.notifications.forEach(notification => {
+			if (notification.id === user.uid) {
+				count = notification.count;
+			}
+		});
+
+		if (count > 0) return count;
+	}
+	
+	addNotificationListener = userId => {
+		this.state.messagesRef.child(userId).on('value', snap => {
+			if (this.state.user) {
+				this.handleNotifictions(userId, this.state.user.uid, this.state.notifications, snap);
+			}
+		})
+	}
+
+	handleNotifictions = (userId, currentUserUid, notifications, snap) => {
+		let lastTotal = 0;
+		let index = notifications.findIndex(notification => notification.id === userId);
+		if (index !== -1) {
+			if (userId !== currentUserUid) {
+				lastTotal = notifications[index].total;
+				if (snap.numChildren() - lastTotal > 0) {
+					notifications[index].count = snap.numChildren() - lastTotal;
+				}
+			}
+			notifications[index].lastKnownTotal = snap.numChildren();
+		} else {
+			notifications.push({
+				id: userId,
+				total: snap.numChildren(),
+				lastKnownTotal: snap.numChildren(),
+				count: 0
+			});
+		}
+		this.setState({ notifications });
 	}
 
 	getChannelId = userId => {
@@ -132,43 +187,44 @@ class DirectMessages extends React.Component {
 	render() {
 		const { users, activeChannel, loggedInUser } = this.state;
 		return (
-			<Menu.Menu className="menu">
-				<Menu.Item>
-					<span>Direct messages</span>{" "}({ users.length })
-					<Icon name="address book outline" title="Find contacts"/>
-				</Menu.Item>
-				<div className="message-users-list scrollBar-container">
-					{
-						loggedInUser.map(user => (
-							<Menu.Item
-								key={user.uid}
-								active={user.uid === activeChannel}
-								onClick={() => this.changeChannel(user)}
-							>
-								<Icon
-									name="circle"
-									color={this.isUserOnline(user) ? 'green' : 'red'}
-								/>
-								<span>{user.name } <i>(you)</i></span>
-							</Menu.Item>
-						))
-					}
-					{ users.map(user => (
-							<Menu.Item
-								key={user.uid}
-								active={user.uid === activeChannel}
-								onClick={() => this.changeChannel(user)}
-							>
-								<Icon
-									name="circle"
-									color={this.isUserOnline(user) ? 'green' : 'red'}
-								/>
-								<span>{user.name}</span>
-							</Menu.Item>
-						))
-					}
-				</div>
-			</Menu.Menu>
+				<Menu.Menu className="menu">
+					<Menu.Item>
+						<span>Direct messages</span>{" "}({ users.length })
+						<Icon name="address book outline" title="Find contacts"/>
+					</Menu.Item>
+					<div className="message-users-list scrollBar-container">
+						{
+							loggedInUser.map(user => (
+								<Menu.Item
+									key={user.uid}
+									active={user.uid === activeChannel}
+									onClick={() => this.changeChannel(user)}
+								>
+									<Icon
+										name="circle"
+										color={this.isUserOnline(user) ? 'green' : 'red'}
+									/>
+									<span>{user.name } <i>(you)</i></span>
+								</Menu.Item>
+							))
+						}
+						{ users.map(user => (
+								<Menu.Item
+									key={user.uid}
+									active={user.uid === activeChannel}
+									onClick={() => this.changeChannel(user)}
+								>
+									<Icon
+										name="circle"
+										color={this.isUserOnline(user) ? 'green' : 'red'}
+									/>
+									<span>{user.name}</span>
+								</Menu.Item>
+							))
+						}
+					</div>
+	      	<Divider/>
+				</Menu.Menu>
 		)
 	}
 }

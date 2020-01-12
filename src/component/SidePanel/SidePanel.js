@@ -1,5 +1,5 @@
 import React from 'react';
-import { Menu, Divider } from 'semantic-ui-react';
+import { Menu } from 'semantic-ui-react';
 
 import UserPanel from './UserPanel';
 import Starred from './Starred';
@@ -18,11 +18,8 @@ class SidePanel extends React.Component {
       >
         <UserPanel currentUser={currentUser} />
         <Starred currentUser={currentUser} />
-        <Divider/>
         <Channels currentUser={currentUser} />
-        <Divider/>
         <DirectMessages currentUser={currentUser} />
-        <Divider/>
       </Menu>
     )
   }

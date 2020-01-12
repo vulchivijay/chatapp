@@ -134,7 +134,7 @@ class UserPanel extends React.Component {
                 </span>
               } options={ this.dropdownOptions() } />
             </Header>
-            <Divider style={{ margin: 0}}/>
+            <Divider style={{ marginTop: 0}}/>
           </Grid.Row>
           {/* user avatar change */}
           <Modal basic open={modal} onClose={this.closeModal}>
